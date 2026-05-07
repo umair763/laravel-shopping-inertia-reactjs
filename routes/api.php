@@ -1,11 +1,11 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\ProductController;
-use App\Http\Controllers\OrderController;
-use App\Http\Controllers\AdminProductController;
-use App\Http\Controllers\AdminDashboardController;
-use App\Http\Controllers\AuthController;
+use App\Domains\Catalog\Http\Controllers\ProductController;
+use App\Domains\Orders\Http\Controllers\OrderController;
+use App\Domains\Catalog\Http\Controllers\AdminProductController;
+use App\Domains\Orders\Http\Controllers\AdminDashboardController;
+use App\Domains\Account\Http\Controllers\AuthController;
 
 /*
 |--------------------------------------------------------------------------

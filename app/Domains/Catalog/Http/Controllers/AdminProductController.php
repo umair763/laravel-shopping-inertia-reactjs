@@ -1,8 +1,9 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Domains\Catalog\Http\Controllers;
 
-use App\Models\Product;
+use App\Domains\Catalog\Models\Product;
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 

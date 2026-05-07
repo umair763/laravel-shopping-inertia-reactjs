@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Models;
+namespace App\Domains\Orders\Models;
 
+use App\Domains\Account\Models\User;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;

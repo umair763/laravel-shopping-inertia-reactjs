@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Models;
+namespace App\Domains\Catalog\Models;
 
+use App\Domains\Orders\Models\OrderItem;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;

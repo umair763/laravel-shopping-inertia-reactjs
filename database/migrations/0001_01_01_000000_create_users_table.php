@@ -11,14 +11,21 @@ return new class extends Migration {
     public function up(): void
     {
         Schema::create('users', function (Blueprint $table) {
-            $table->id();
-            $table->string('name');
-            $table->string('email')->unique();
-            $table->timestamp('email_verified_at')->nullable();
-            $table->string('password');
-            $table->enum('role', ['user', 'admin'])->default('user');
-            $table->rememberToken();
+            $table->uuid('id')->primary();
+            $table->string('first_name', 100)->nullable();
+            $table->string('last_name', 100)->nullable();
+            $table->string('username', 100)->unique()->nullable();
+            $table->string('email', 255)->unique();
+            $table->string('phone', 30)->nullable();
+            $table->text('password_hash');
+            $table->text('profile_image')->nullable();
+            $table->enum('role', ['admin', 'customer']);
+            $table->string('status', 50)->default('active');
+            $table->boolean('is_email_verified')->default(false);
+            $table->boolean('is_phone_verified')->default(false);
+            $table->timestamp('last_login_at')->nullable();
             $table->timestamps();
+            $table->softDeletes();
         });
 
         Schema::create('password_reset_tokens', function (Blueprint $table) {
@@ -29,7 +36,7 @@ return new class extends Migration {
 
         Schema::create('sessions', function (Blueprint $table) {
             $table->string('id')->primary();
-            $table->foreignId('user_id')->nullable()->index();
+            $table->uuid('user_id')->nullable()->index();
             $table->string('ip_address', 45)->nullable();
             $table->text('user_agent')->nullable();
             $table->longText('payload');
