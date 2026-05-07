@@ -2,6 +2,9 @@
 
 namespace App\Domains\Orders\Http\Controllers;
 
+use App\Domains\Orders\Actions\GetAdminDashboardStats;
+use App\Domains\Orders\Actions\ListAllOrders;
+use App\Domains\Orders\Actions\UpdateOrderStatus;
 use App\Domains\Account\Models\User;
 use App\Domains\Catalog\Models\Product;
 use App\Domains\Orders\Models\Order;
@@ -16,23 +19,11 @@ class AdminDashboardController extends Controller
    */
   public function index()
   {
-    $stats = [
-      'total_products' => Product::count(),
-      'active_products' => Product::where('is_active', true)->count(),
-      'total_users' => User::where('role', 'user')->count(),
-      'total_orders' => Order::count(),
-      'total_revenue' => Order::where('status', 'completed')->sum('total_amount'),
-      'pending_orders' => Order::where('status', 'pending')->count(),
-    ];
-
-    $recent_orders = Order::with('user')
-      ->orderBy('created_at', 'desc')
-      ->limit(10)
-      ->get();
+    $stats = app(GetAdminDashboardStats::class)->handle();
 
     return Inertia::render('Admin/Dashboard', [
       'stats' => $stats,
-      'recent_orders' => $recent_orders,
+      'recent_orders' => $stats['recent_orders'] ?? [],
     ]);
   }
 
@@ -41,9 +32,7 @@ class AdminDashboardController extends Controller
    */
   public function orders()
   {
-    $orders = Order::with('user')
-      ->orderBy('created_at', 'desc')
-      ->paginate(20);
+    $orders = app(ListAllOrders::class)->handle(20);
 
     return Inertia::render('Admin/Orders', [
       'orders' => $orders,
@@ -66,10 +55,10 @@ class AdminDashboardController extends Controller
   public function updateOrder(Request $request, Order $order)
   {
     $validated = $request->validate([
-      'status' => 'required|in:pending,processing,completed,cancelled',
+      'status' => 'required|in:pending,processing,shipped,delivered,cancelled,returned',
     ]);
 
-    $order->update($validated);
+    app(UpdateOrderStatus::class)->handle($order, $validated['status']);
 
     return redirect()->route('admin.orders')
       ->with('success', 'Order status updated successfully');
@@ -80,21 +69,8 @@ class AdminDashboardController extends Controller
    */
   public function apiStats()
   {
-    $stats = [
-      'total_products' => Product::count(),
-      'active_products' => Product::where('is_active', true)->count(),
-      'total_users' => User::where('role', 'user')->count(),
-      'total_orders' => Order::count(),
-      'total_revenue' => Order::where('status', 'completed')->sum('total_amount'),
-      'pending_orders' => Order::where('status', 'pending')->count(),
-      'recent_orders' => Order::with('user')
-        ->orderBy('created_at', 'desc')
-        ->limit(10)
-        ->get(),
-    ];
-
     return response()->json([
-      'data' => $stats,
+      'data' => app(GetAdminDashboardStats::class)->handle(),
       'success' => true,
     ]);
   }

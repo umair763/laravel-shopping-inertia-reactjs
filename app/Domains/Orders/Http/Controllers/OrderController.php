@@ -2,6 +2,8 @@
 
 namespace App\Domains\Orders\Http\Controllers;
 
+use App\Domains\Orders\Actions\CreateOrder;
+use App\Domains\Orders\Actions\ListUserOrders;
 use App\Domains\Catalog\Models\Product;
 use App\Domains\Orders\Models\Order;
 use App\Http\Controllers\Controller;
@@ -15,9 +17,7 @@ class OrderController extends Controller
    */
   public function index(Request $request)
   {
-    $orders = $request->user()->orders()
-      ->orderBy('created_at', 'desc')
-      ->paginate(10);
+    $orders = app(ListUserOrders::class)->handle($request->user(), true, 10);
 
     return Inertia::render('User/Orders', [
       'orders' => $orders,
@@ -50,45 +50,11 @@ class OrderController extends Controller
     ]);
 
     try {
-      $order = new Order([
+      $order = app(CreateOrder::class)->handle([
         'user_id' => $request->user()->id,
         'shipping_address' => $validated['shipping_address'],
-        'total_amount' => 0,
-        'status' => 'pending',
+        'items' => $validated['items'],
       ]);
-
-      $totalAmount = 0;
-
-      foreach ($validated['items'] as $item) {
-        $product = Product::findOrFail($item['product_id']);
-
-        if ($product->quantity < $item['quantity']) {
-          return response()->json([
-            'message' => "Insufficient stock for {$product->name}",
-            'success' => false,
-          ], 422);
-        }
-
-        $itemTotal = $product->price * $item['quantity'];
-        $totalAmount += $itemTotal;
-
-        // Deduct quantity
-        $product->decrement('quantity', $item['quantity']);
-      }
-
-      $order->total_amount = $totalAmount;
-      $order->save();
-
-      // Save order items
-      foreach ($validated['items'] as $item) {
-        $product = Product::findOrFail($item['product_id']);
-        $order->items()->create([
-          'product_id' => $product->id,
-          'quantity' => $item['quantity'],
-          'unit_price' => $product->price,
-          'total_price' => $product->price * $item['quantity'],
-        ]);
-      }
 
       return response()->json([
         'message' => 'Order created successfully',
@@ -109,10 +75,7 @@ class OrderController extends Controller
    */
   public function apiIndex(Request $request)
   {
-    $orders = $request->user()->orders()
-      ->with('items.product')
-      ->orderBy('created_at', 'desc')
-      ->get();
+    $orders = app(ListUserOrders::class)->handle($request->user(), false);
 
     return response()->json([
       'data' => $orders,
@@ -126,5 +89,18 @@ class OrderController extends Controller
   public function apiStore(Request $request)
   {
     return $this->store($request);
+  }
+
+  /**
+   * API: Get a single order as JSON
+   */
+  public function apiShow(Request $request, Order $order)
+  {
+    $this->authorize('view', $order);
+
+    return response()->json([
+      'data' => $order->load('items.product'),
+      'success' => true,
+    ]);
   }
 }

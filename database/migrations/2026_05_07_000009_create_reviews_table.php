@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration {
@@ -19,8 +20,12 @@ return new class extends Migration {
       $table->text('comment')->nullable();
       $table->timestamp('created_at')->useCurrent();
       $table->unique(['user_id', 'product_id']);
-      $table->check('rating BETWEEN 1 AND 5');
     });
+
+    $driver = DB::getDriverName();
+    if (in_array($driver, ['mysql', 'pgsql'], true)) {
+      DB::statement('ALTER TABLE reviews ADD CONSTRAINT reviews_rating_check CHECK (rating BETWEEN 1 AND 5)');
+    }
   }
 
   /**

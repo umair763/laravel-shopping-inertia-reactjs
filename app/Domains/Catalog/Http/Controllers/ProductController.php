@@ -2,6 +2,9 @@
 
 namespace App\Domains\Catalog\Http\Controllers;
 
+use App\Domains\Catalog\Actions\GetActiveProduct;
+use App\Domains\Catalog\Actions\ListActiveProducts;
+use App\Domains\Catalog\Actions\PresentProductForStorefront;
 use App\Domains\Catalog\Models\Product;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -14,9 +17,13 @@ class ProductController extends Controller
    */
   public function index(Request $request)
   {
-    $products = Product::where('is_active', true)
-      ->orderBy('created_at', 'desc')
-      ->paginate(12);
+    $products = app(ListActiveProducts::class)->handle([
+      'category' => $request->get('category'),
+      'search' => $request->get('search'),
+    ], true, 12);
+
+    $presenter = app(PresentProductForStorefront::class);
+    $products->through(fn (Product $product) => $presenter->handle($product));
 
     return Inertia::render('User/Products', [
       'products' => $products,
@@ -32,12 +39,10 @@ class ProductController extends Controller
    */
   public function show(Product $product)
   {
-    if (!$product->is_active) {
-      abort(404);
-    }
+    $loaded = app(GetActiveProduct::class)->handle($product);
 
     return Inertia::render('User/ViewProduct', [
-      'product' => $product->load('orderItems'),
+      'product' => app(PresentProductForStorefront::class)->handle($loaded),
     ]);
   }
 
@@ -46,19 +51,14 @@ class ProductController extends Controller
    */
   public function apiIndex(Request $request)
   {
-    $query = Product::where('is_active', true);
-
-    if ($request->get('category')) {
-      $query->where('category', $request->get('category'));
-    }
-
-    if ($request->get('search')) {
-      $query->where('name', 'like', '%' . $request->get('search') . '%')
-        ->orWhere('description', 'like', '%' . $request->get('search') . '%');
-    }
+    $presenter = app(PresentProductForStorefront::class);
+    $products = app(ListActiveProducts::class)->handle([
+      'category' => $request->get('category'),
+      'search' => $request->get('search'),
+    ], false);
 
     return response()->json([
-      'data' => $query->orderBy('created_at', 'desc')->get(),
+      'data' => $products->map(fn (Product $product) => $presenter->handle($product))->values(),
       'success' => true,
     ]);
   }
@@ -68,12 +68,8 @@ class ProductController extends Controller
    */
   public function apiShow(Product $product)
   {
-    if (!$product->is_active) {
-      return response()->json(['message' => 'Product not found'], 404);
-    }
-
     return response()->json([
-      'data' => $product->load('orderItems'),
+      'data' => app(PresentProductForStorefront::class)->handle(app(GetActiveProduct::class)->handle($product)),
       'success' => true,
     ]);
   }

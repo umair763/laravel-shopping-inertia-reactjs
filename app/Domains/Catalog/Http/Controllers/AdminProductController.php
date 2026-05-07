@@ -2,6 +2,9 @@
 
 namespace App\Domains\Catalog\Http\Controllers;
 
+use App\Domains\Catalog\Actions\CreateProduct;
+use App\Domains\Catalog\Actions\DeleteProduct;
+use App\Domains\Catalog\Actions\UpdateProduct;
 use App\Domains\Catalog\Models\Product;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -52,7 +55,7 @@ class AdminProductController extends Controller
       'is_active' => 'boolean',
     ]);
 
-    $product = Product::create($validated);
+    app(CreateProduct::class)->handle($validated);
 
     return redirect()->route('admin.products.index')
       ->with('success', 'Product created successfully');
@@ -85,7 +88,7 @@ class AdminProductController extends Controller
       'is_active' => 'boolean',
     ]);
 
-    $product->update($validated);
+    app(UpdateProduct::class)->handle($product, $validated);
 
     return redirect()->route('admin.products.index')
       ->with('success', 'Product updated successfully');
@@ -96,7 +99,7 @@ class AdminProductController extends Controller
    */
   public function destroy(Product $product)
   {
-    $product->delete();
+    app(DeleteProduct::class)->handle($product);
 
     return redirect()->route('admin.products.index')
       ->with('success', 'Product deleted successfully');
@@ -118,7 +121,7 @@ class AdminProductController extends Controller
       'is_active' => 'boolean',
     ]);
 
-    $product = Product::create($validated);
+    $product = app(CreateProduct::class)->handle($validated);
 
     return response()->json([
       'message' => 'Product created successfully',
@@ -143,7 +146,7 @@ class AdminProductController extends Controller
       'is_active' => 'boolean',
     ]);
 
-    $product->update($validated);
+    $product = app(UpdateProduct::class)->handle($product, $validated);
 
     return response()->json([
       'message' => 'Product updated successfully',
@@ -157,7 +160,7 @@ class AdminProductController extends Controller
    */
   public function apiDestroy(Product $product)
   {
-    $product->delete();
+    app(DeleteProduct::class)->handle($product);
 
     return response()->json([
       'message' => 'Product deleted successfully',

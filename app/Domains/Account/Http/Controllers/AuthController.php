@@ -2,6 +2,10 @@
 
 namespace App\Domains\Account\Http\Controllers;
 
+use App\Domains\Account\Actions\ClearApiToken;
+use App\Domains\Account\Actions\IssueApiToken;
+use App\Domains\Account\Actions\RegisterUser;
+use App\Domains\Account\Actions\ValidateCredentials;
 use App\Domains\Account\Models\User;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -54,10 +58,10 @@ class AuthController extends Controller
   public function register(Request $request)
   {
     if ($this->isApiRequest($request)) {
-      return $this->registerApi($request, 'user');
+      return $this->registerApi($request, 'customer');
     }
 
-    return $this->registerWithRole($request, 'user');
+    return $this->registerWithRole($request, 'customer');
   }
 
   /**
@@ -67,10 +71,10 @@ class AuthController extends Controller
   public function login(Request $request)
   {
     if ($this->isApiRequest($request)) {
-      return $this->loginApi($request, 'user');
+      return $this->loginApi($request, 'customer');
     }
 
-    return $this->loginWithRole($request, 'user');
+    return $this->loginWithRole($request, 'customer');
   }
 
   /**
@@ -170,10 +174,10 @@ class AuthController extends Controller
       'password' => 'required|string|min:8|confirmed',
     ]);
 
-    $user = User::create([
+    $user = app(RegisterUser::class)->handle([
       'name' => $validated['name'],
       'email' => $validated['email'],
-      'password' => Hash::make($validated['password']),
+      'password' => $validated['password'],
       'role' => $role,
     ]);
 
@@ -199,14 +203,14 @@ class AuthController extends Controller
       'password' => 'required|string|min:8|confirmed',
     ]);
 
-    $user = User::create([
+    $user = app(RegisterUser::class)->handle([
       'name' => $validated['name'],
       'email' => $validated['email'],
-      'password' => Hash::make($validated['password']),
+      'password' => $validated['password'],
       'role' => $role,
     ]);
 
-    $token = $this->issueApiToken($user);
+    $token = app(IssueApiToken::class)->handle($user);
 
     return response()->json([
       'message' => $role === 'admin' ? 'Admin user created successfully' : 'User registered successfully',
@@ -223,9 +227,9 @@ class AuthController extends Controller
       'password' => 'required|string',
     ]);
 
-    $user = User::where('email', $validated['email'])->first();
+    $user = app(ValidateCredentials::class)->handle($validated['email'], $validated['password'], $role);
 
-    if (!$user || !Hash::check($validated['password'], $user->password) || $user->role !== $role) {
+    if (!$user) {
       throw ValidationException::withMessages([
         'email' => [
           $role === 'admin'
@@ -250,9 +254,9 @@ class AuthController extends Controller
       'password' => 'required|string',
     ]);
 
-    $user = User::where('email', $validated['email'])->first();
+    $user = app(ValidateCredentials::class)->handle($validated['email'], $validated['password'], $role);
 
-    if (!$user || !Hash::check($validated['password'], $user->password) || $user->role !== $role) {
+    if (!$user) {
       return response()->json([
         'message' => $role === 'admin'
           ? 'This admin account is not valid for the admin portal.'
@@ -260,7 +264,7 @@ class AuthController extends Controller
       ], 422);
     }
 
-    $token = $this->issueApiToken($user);
+    $token = app(IssueApiToken::class)->handle($user);
 
     return response()->json([
       'message' => 'Logged in successfully',
@@ -287,14 +291,14 @@ class AuthController extends Controller
       'password' => 'required|string|min:8|confirmed',
     ]);
 
-    $user = User::create([
+    $user = app(RegisterUser::class)->handle([
       'name' => $validated['name'],
       'email' => $validated['email'],
-      'password' => Hash::make($validated['password']),
+      'password' => $validated['password'],
       'role' => 'admin',
     ]);
 
-    $token = $this->issueApiToken($user);
+    $token = app(IssueApiToken::class)->handle($user);
 
     return response()->json([
       'message' => 'Admin user created successfully',
@@ -314,22 +318,11 @@ class AuthController extends Controller
       ], 401);
     }
 
-    $user->forceFill(['api_token_hash' => null])->save();
+    app(ClearApiToken::class)->handle($user);
 
     return response()->json([
       'message' => 'Logged out successfully',
     ]);
-  }
-
-  private function issueApiToken(User $user): string
-  {
-    $plainToken = Str::random(64);
-
-    $user->forceFill([
-      'api_token_hash' => hash('sha256', $plainToken),
-    ])->save();
-
-    return $plainToken;
   }
 
   private function resolveApiUser(Request $request): ?User

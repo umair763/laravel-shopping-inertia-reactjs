@@ -24,19 +24,20 @@ class AuthFlowTest extends TestCase
 
     $this->assertDatabaseHas('users', [
       'email' => 'jane@example.com',
-      'role' => 'user',
+      'role' => 'customer',
     ]);
 
     $this->assertAuthenticated();
-    $this->assertTrue(auth()->user()?->role === 'user');
+    $this->assertTrue(auth()->user()?->role === 'customer');
   }
 
   public function test_admin_can_login_and_create_another_admin(): void
   {
     $admin = User::factory()->create([
-      'name' => 'Admin One',
+      'first_name' => 'Admin',
+      'last_name' => 'One',
       'email' => 'admin1@example.com',
-      'password' => Hash::make('password123'),
+      'password_hash' => Hash::make('password123'),
       'role' => 'admin',
     ]);
 
@@ -68,17 +69,19 @@ class AuthFlowTest extends TestCase
   public function test_non_admin_cannot_create_admin_when_admins_exist(): void
   {
     User::factory()->create([
-      'name' => 'Admin One',
+      'first_name' => 'Admin',
+      'last_name' => 'One',
       'email' => 'admin1@example.com',
-      'password' => Hash::make('password123'),
+      'password_hash' => Hash::make('password123'),
       'role' => 'admin',
     ]);
 
     $user = User::factory()->create([
-      'name' => 'Customer One',
+      'first_name' => 'Customer',
+      'last_name' => 'One',
       'email' => 'customer@example.com',
-      'password' => Hash::make('password123'),
-      'role' => 'user',
+      'password_hash' => Hash::make('password123'),
+      'role' => 'customer',
     ]);
 
     $this->post('/login', [

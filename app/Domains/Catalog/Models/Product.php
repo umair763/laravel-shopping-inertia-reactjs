@@ -3,15 +3,49 @@
 namespace App\Domains\Catalog\Models;
 
 use App\Domains\Orders\Models\OrderItem;
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-#[Fillable(['name', 'description', 'price', 'quantity', 'image_url', 'sku', 'category', 'is_active'])]
+#[Fillable([
+  'catalogue_id',
+  'category_id',
+  'name',
+  'slug',
+  'short_description',
+  'description',
+  'brand',
+  'sku',
+  'status',
+  'is_featured',
+  'seo_title',
+  'seo_description',
+])]
 class Product extends Model
 {
-  use HasFactory;
+  use HasFactory, HasUuids;
+
+  public $incrementing = false;
+
+  protected $keyType = 'string';
+
+  public function catalogue(): BelongsTo
+  {
+    return $this->belongsTo(Catalogue::class);
+  }
+
+  public function category(): BelongsTo
+  {
+    return $this->belongsTo(Category::class);
+  }
+
+  public function variants(): HasMany
+  {
+    return $this->hasMany(ProductVariant::class);
+  }
 
   /**
    * Get the order items for this product
@@ -21,11 +55,8 @@ class Product extends Model
     return $this->hasMany(OrderItem::class);
   }
 
-  /**
-   * Check if product is in stock
-   */
-  public function isInStock(): bool
+  public function isActive(): bool
   {
-    return $this->quantity > 0 && $this->is_active;
+    return $this->status === 'active';
   }
 }

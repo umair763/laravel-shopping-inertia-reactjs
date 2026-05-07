@@ -3,6 +3,7 @@
 namespace App\Domains\Catalog\Models;
 
 use Illuminate\Database\Eloquent\Attributes\Fillable;
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -14,5 +15,15 @@ use Illuminate\Database\Eloquent\Model;
 ])]
 class Inventory extends Model
 {
-  use HasFactory;
+  use HasFactory, HasUuids;
+
+  protected $table = 'inventory';
+
+  public $incrementing = false;
+
+  protected $keyType = 'string';
+
+  const UPDATED_AT = 'updated_at';
+
+  const CREATED_AT = null;
 }
