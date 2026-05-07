@@ -1,12 +1,16 @@
 import React from 'react';
+import DropDown from '@/components/drop.down';
 
 export default function AppLayout({ children, sidebarItems = [] }) {
   return (
     <div className="min-h-screen flex flex-col">
 
       {/* NAVBAR */}
-      <nav className="h-14 bg-gray-900 text-white flex items-center px-4">
-        My Shop
+      <nav className="h-14 bg-gray-900 text-white flex items-center justify-between px-4 border-b border-white/10">
+        <div className="font-semibold tracking-wide">My Shop</div>
+        <div className="flex items-center gap-3">
+          <DropDown />
+        </div>
       </nav>
 
       <div className="flex flex-1">

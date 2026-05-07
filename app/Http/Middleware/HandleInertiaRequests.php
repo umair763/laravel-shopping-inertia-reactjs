@@ -37,7 +37,15 @@ class HandleInertiaRequests extends Middleware
     {
         return [
             ...parent::share($request),
-            //
+            'auth' => [
+                'user' => fn() => $request->user(),
+                'is_admin' => fn() => (bool) ($request->user()?->isAdmin()),
+            ],
+            'flash' => [
+                'success' => fn() => $request->session()->get('success'),
+                'error' => fn() => $request->session()->get('error'),
+            ],
+            'csrf_token' => fn() => csrf_token(),
         ];
     }
 }

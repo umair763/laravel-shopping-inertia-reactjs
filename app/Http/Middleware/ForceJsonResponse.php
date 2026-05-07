@@ -6,16 +6,14 @@ use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class IsAdmin
+class ForceJsonResponse
 {
   /**
    * Handle an incoming request.
    */
   public function handle(Request $request, Closure $next): Response
   {
-    if (!$request->user() || !$request->user()->isAdmin()) {
-      abort(403, 'Unauthorized. Admin access required.');
-    }
+    $request->headers->set('Accept', 'application/json');
 
     return $next($request);
   }

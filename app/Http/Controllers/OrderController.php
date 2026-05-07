@@ -12,9 +12,9 @@ class OrderController extends Controller
   /**
    * Display all orders for authenticated user
    */
-  public function index()
+  public function index(Request $request)
   {
-    $orders = auth()->user()->orders()
+    $orders = $request->user()->orders()
       ->orderBy('created_at', 'desc')
       ->paginate(10);
 
@@ -50,7 +50,7 @@ class OrderController extends Controller
 
     try {
       $order = new Order([
-        'user_id' => auth()->id(),
+        'user_id' => $request->user()->id,
         'shipping_address' => $validated['shipping_address'],
         'total_amount' => 0,
         'status' => 'pending',
@@ -106,9 +106,9 @@ class OrderController extends Controller
   /**
    * API: Get all user's orders as JSON
    */
-  public function apiIndex()
+  public function apiIndex(Request $request)
   {
-    $orders = auth()->user()->orders()
+    $orders = $request->user()->orders()
       ->with('items.product')
       ->orderBy('created_at', 'desc')
       ->get();

@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\AdminProductController;
@@ -12,6 +13,16 @@ use App\Http\Controllers\AdminDashboardController;
 | PUBLIC ROUTES
 |--------------------------------------------------------------------------
 */
+
+Route::get('/login', [AuthController::class, 'showUserLogin'])->name('auth.user.login');
+Route::get('/register', [AuthController::class, 'showUserRegister'])->name('auth.user.register');
+Route::get('/admin/login', [AuthController::class, 'showAdminLogin'])->name('auth.admin.login');
+Route::get('/admin/register', [AuthController::class, 'showAdminRegister'])->name('auth.admin.register');
+
+Route::post('/register', [AuthController::class, 'register'])->name('auth.user.register.submit');
+Route::post('/login', [AuthController::class, 'login'])->name('auth.user.login.submit');
+Route::post('/admin/login', [AuthController::class, 'adminLogin'])->name('auth.admin.login.submit');
+Route::post('/admin/register', [AuthController::class, 'createAdmin'])->name('auth.admin.register.submit');
 
 // Default home page - User Products View
 Route::get('/', [ProductController::class, 'index'])->name('home');
