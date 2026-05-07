@@ -30,6 +30,18 @@ class ProductVariant extends Model
 
   protected $keyType = 'string';
 
+  /**
+   * Cast JSON attributes to/from array.
+   *
+   * @return array<string, string>
+   */
+  protected function casts(): array
+  {
+    return [
+      'attributes' => 'array',
+    ];
+  }
+
   public function product(): BelongsTo
   {
     return $this->belongsTo(Product::class);
