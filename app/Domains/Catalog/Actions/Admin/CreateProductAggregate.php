@@ -6,7 +6,9 @@ use App\Domains\Catalog\Models\Inventory;
 use App\Domains\Catalog\Models\Product;
 use App\Domains\Catalog\Models\ProductImage;
 use App\Domains\Catalog\Models\ProductVariant;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 class CreateProductAggregate
 {
@@ -50,9 +52,15 @@ class CreateProductAggregate
 
       if (!empty($data['images']) && is_array($data['images'])) {
         foreach ($data['images'] as $idx => $img) {
+          $imageUrl = $this->resolveImageUrl($img);
+
+          if (!$imageUrl) {
+            continue;
+          }
+
           ProductImage::create([
             'variant_id' => $variant->id,
-            'image_url' => $img['image_url'],
+            'image_url' => $imageUrl,
             'is_primary' => (bool) ($img['is_primary'] ?? ($idx === 0)),
             'sort_order' => (int) ($img['sort_order'] ?? $idx),
           ]);
@@ -61,6 +69,19 @@ class CreateProductAggregate
 
       return $product->load('variants.images', 'variants.inventory', 'category', 'catalogue');
     });
+  }
+
+  private function resolveImageUrl(array $image): ?string
+  {
+    if (!empty($image['image_file']) && $image['image_file'] instanceof UploadedFile) {
+      $path = $image['image_file']->storePublicly('products', 'public');
+
+      return Storage::disk('public')->url($path);
+    }
+
+    $imageUrl = trim((string) ($image['image_url'] ?? ''));
+
+    return $imageUrl !== '' ? $imageUrl : null;
   }
 }
 

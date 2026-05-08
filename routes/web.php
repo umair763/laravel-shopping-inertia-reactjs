@@ -14,7 +14,7 @@ use App\Domains\Orders\Http\Controllers\AdminDashboardController;
 |--------------------------------------------------------------------------
 */
 
-Route::get('/login', [AuthController::class, 'showUserLogin'])->name('auth.user.login');
+Route::get('/login', [AuthController::class, 'showUserLogin'])->name('login');
 Route::get('/register', [AuthController::class, 'showUserRegister'])->name('auth.user.register');
 Route::get('/admin/login', [AuthController::class, 'showAdminLogin'])->name('auth.admin.login');
 Route::get('/admin/register', [AuthController::class, 'showAdminRegister'])->name('auth.admin.register');

@@ -44,7 +44,8 @@ class CreateProductRequest extends FormRequest
       'inventory.low_stock_threshold' => 'nullable|integer|min:0',
 
       'images' => 'nullable|array',
-      'images.*.image_url' => 'required_with:images|url',
+      'images.*.image_url' => 'nullable|url',
+      'images.*.image_file' => 'nullable|image|max:4096',
       'images.*.is_primary' => 'nullable|boolean',
       'images.*.sort_order' => 'nullable|integer|min:0',
     ];

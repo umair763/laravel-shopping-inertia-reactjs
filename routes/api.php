@@ -54,6 +54,8 @@ Route::middleware(['api', 'force.json'])->group(function () {
     // Account
     Route::prefix('account')->group(function () {
       Route::get('/profile', [AuthController::class, 'user'])->name('api.account.profile');
+      Route::get('/user', [AuthController::class, 'user'])->name('api.account.user');
+      Route::put('/profile', [AuthController::class, 'updateProfile'])->name('api.account.profile.update');
     });
 
     // Cart

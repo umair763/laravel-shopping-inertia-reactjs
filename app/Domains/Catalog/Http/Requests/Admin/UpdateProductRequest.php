@@ -44,7 +44,8 @@ class UpdateProductRequest extends FormRequest
       'inventory.low_stock_threshold' => 'sometimes|integer|min:0',
 
       'images' => 'sometimes|array',
-      'images.*.image_url' => 'required_with:images|url',
+      'images.*.image_url' => 'nullable|url',
+      'images.*.image_file' => 'nullable|image|max:4096',
       'images.*.is_primary' => 'sometimes|boolean',
       'images.*.sort_order' => 'sometimes|integer|min:0',
     ];

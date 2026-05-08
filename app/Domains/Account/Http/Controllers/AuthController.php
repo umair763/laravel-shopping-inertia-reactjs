@@ -2,16 +2,18 @@
 
 namespace App\Domains\Account\Http\Controllers;
 
+use App\Domains\Account\Actions\UpdateProfile;
 use App\Domains\Account\Actions\ClearApiToken;
 use App\Domains\Account\Actions\IssueApiToken;
 use App\Domains\Account\Actions\RegisterUser;
 use App\Domains\Account\Actions\ValidateCredentials;
+use App\Domains\Account\Http\Requests\UpdateProfileRequest;
 use App\Domains\Account\Models\User;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\ValidationException;
 use Inertia\Inertia;
 
@@ -135,6 +137,35 @@ class AuthController extends Controller
 
     return response()->json([
       'data' => $request->user(),
+      'success' => true,
+    ]);
+  }
+
+  /**
+   * Update the authenticated user's profile.
+   */
+  public function updateProfile(UpdateProfileRequest $request)
+  {
+    $user = $request->user();
+
+    if (!$user) {
+      return response()->json([
+        'message' => 'Unauthenticated.',
+      ], 401);
+    }
+
+    $validated = $request->validated();
+
+    if ($request->hasFile('profile_image_file')) {
+      $path = $request->file('profile_image_file')->storePublicly('profiles', 'public');
+      $validated['profile_image'] = Storage::disk('public')->url($path);
+    }
+
+    app(UpdateProfile::class)->handle($user, $validated);
+
+    return response()->json([
+      'message' => 'Profile updated successfully',
+      'user' => $user->fresh(),
       'success' => true,
     ]);
   }
