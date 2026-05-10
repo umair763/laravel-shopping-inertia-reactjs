@@ -1,5 +1,5 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link } from "@inertiajs/react";
 
 const themes = {
   amber: {

@@ -1,5 +1,5 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link } from "@inertiajs/react";
 import AuthSplitLayout from "../../shared/ui/auth/auth.split.layout.jsx";
 import RegisterForm from "../../features/account/components/register.form.jsx";
 
@@ -27,10 +27,10 @@ export default function AdminRegisterPage() {
       reverse
       leftFooter={(
         <div className="flex flex-wrap items-center gap-3 text-sm">
-          <Link className="rounded-full border border-white/15 px-4 py-2 font-semibold text-white transition hover:border-white/30 hover:bg-white/10" to="/auth/admin/login">
+          <Link className="rounded-full border border-white/15 px-4 py-2 font-semibold text-white transition hover:border-white/30 hover:bg-white/10" href="/admin/login">
             Back to admin sign in
           </Link>
-          <Link className="rounded-full border border-white/15 px-4 py-2 font-semibold text-white/75 transition hover:border-white/30 hover:bg-white/10" to="/admin">
+          <Link className="rounded-full border border-white/15 px-4 py-2 font-semibold text-white/75 transition hover:border-white/30 hover:bg-white/10" href="/admin">
             Open dashboard
           </Link>
         </div>
@@ -49,7 +49,7 @@ export default function AdminRegisterPage() {
 
         <p className="text-sm text-zinc-500">
           Already have admin access?{" "}
-          <Link className="font-semibold text-violet-600 underline decoration-violet-200 decoration-2 underline-offset-4" to="/auth/admin/login">
+          <Link className="font-semibold text-violet-600 underline decoration-violet-200 decoration-2 underline-offset-4" href="/admin/login">
             Sign in to the admin portal
           </Link>
         </p>

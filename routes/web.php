@@ -23,6 +23,7 @@ Route::post('/register', [AuthController::class, 'register'])->name('auth.user.r
 Route::post('/login', [AuthController::class, 'login'])->name('auth.user.login.submit');
 Route::post('/admin/login', [AuthController::class, 'adminLogin'])->name('auth.admin.login.submit');
 Route::post('/admin/register', [AuthController::class, 'createAdmin'])->name('auth.admin.register.submit');
+Route::post('/logout', [AuthController::class, 'logout'])->name('auth.logout');
 
 // Default home page - User Products View
 Route::get('/', [ProductController::class, 'index'])->name('home');
@@ -65,7 +66,7 @@ Route::middleware(['auth'])->group(function () {
 */
 
 Route::prefix('admin')
-    ->middleware(['auth', 'is_admin'])
+    ->middleware(['is_admin'])
     ->group(function () {
 
         // Dashboard
@@ -85,6 +86,3 @@ Route::prefix('admin')
         Route::put('/orders/{order}', [AdminDashboardController::class, 'updateOrder'])->name('admin.orders.update');
 
     });
-
-
-

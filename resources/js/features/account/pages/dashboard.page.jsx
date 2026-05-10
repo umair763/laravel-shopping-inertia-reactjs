@@ -1,7 +1,5 @@
 import React from "react";
-import { Link } from "react-router-dom";
-import { useSelector } from "react-redux";
-import useProfile from "../hooks/use.profile.js";
+import { Link, usePage } from "@inertiajs/react";
 
 const stats = [
   { label: "Orders", value: "12", tone: "bg-sky-50 text-sky-700 border-sky-100" },
@@ -11,9 +9,8 @@ const stats = [
 ];
 
 export default function CustomerDashboardPage() {
-  const { data } = useProfile();
-  const user = useSelector((state) => state.auth.user);
-  const profile = data?.data || user || {};
+  const { props } = usePage();
+  const profile = props?.auth?.user || {};
 
   return (
     <section className="space-y-6">
@@ -26,10 +23,10 @@ export default function CustomerDashboardPage() {
               Manage your orders, track returns, update profile settings, and keep your region and language preferences in one clean workspace.
             </p>
             <div className="flex flex-wrap gap-3">
-              <Link to="/account/orders" className="rounded-full bg-sky-500 px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-sky-100 transition hover:bg-sky-600">
+              <Link href="/account/orders" className="rounded-full bg-sky-500 px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-sky-100 transition hover:bg-sky-600">
                 View orders
               </Link>
-              <Link to="/account/profile" className="rounded-full border border-slate-200 bg-white px-5 py-3 text-sm font-semibold text-slate-700 transition hover:border-sky-200 hover:bg-sky-50">
+              <Link href="/account/profile" className="rounded-full border border-slate-200 bg-white px-5 py-3 text-sm font-semibold text-slate-700 transition hover:border-sky-200 hover:bg-sky-50">
                 Profile settings
               </Link>
             </div>
@@ -58,13 +55,13 @@ export default function CustomerDashboardPage() {
       </div>
 
       <div className="grid gap-4 lg:grid-cols-2">
-        <Link to="/account/orders" className="rounded-[1.75rem] border border-slate-100 bg-white p-6 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md">
+        <Link href="/account/orders" className="rounded-[1.75rem] border border-slate-100 bg-white p-6 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md">
           <p className="text-xs uppercase tracking-[0.28em] text-sky-500">Orders</p>
           <h2 className="mt-3 text-2xl font-black tracking-tight text-slate-900">Track deliveries and invoices</h2>
           <p className="mt-2 text-sm leading-6 text-slate-600">Check active orders, delivery status, and your order history.</p>
         </Link>
 
-        <Link to="/account/returns" className="rounded-[1.75rem] border border-slate-100 bg-white p-6 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md">
+        <Link href="/account/returns" className="rounded-[1.75rem] border border-slate-100 bg-white p-6 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md">
           <p className="text-xs uppercase tracking-[0.28em] text-sky-500">Returns</p>
           <h2 className="mt-3 text-2xl font-black tracking-tight text-slate-900">Start or review returns</h2>
           <p className="mt-2 text-sm leading-6 text-slate-600">Open a return request and view return progress in one place.</p>

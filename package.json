@@ -15,15 +15,28 @@
     },
     "dependencies": {
         "@inertiajs/react": "^3.0.3",
-        "@reduxjs/toolkit": "^2.11.2",
-        "@tanstack/react-query": "^5.100.9",
         "@vitejs/plugin-react": "^6.0.1",
-        "axios": "^1.16.0",
         "lucide-react": "^1.14.0",
         "react": "^19.2.5",
         "react-dom": "^19.2.5",
-        "react-redux": "^9.2.0",
-        "react-router-dom": "^7.15.0",
         "zod": "^4.4.3"
-    }
+    },
+    "name": "ecommerce-website",
+    "version": "1.0.0",
+    "description": "<p align=\"center\"><a href=\"https://laravel.com\" target=\"_blank\"><img src=\"https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg\" width=\"400\" alt=\"Laravel Logo\"></a></p>",
+    "main": "vite.config.js",
+    "directories": {
+        "test": "tests"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/umair763/laravel-shopping-inertia-reactjs.git"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/umair763/laravel-shopping-inertia-reactjs/issues"
+    },
+    "homepage": "https://github.com/umair763/laravel-shopping-inertia-reactjs#readme"
 }

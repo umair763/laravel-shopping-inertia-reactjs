@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link } from "@inertiajs/react";
 import { PanelLeftClose, PanelLeftOpen } from "lucide-react";
 
 export default function SidebarComponent() {
@@ -50,18 +50,18 @@ export default function SidebarComponent() {
         <div>
           {!collapsed && <p className="px-3 text-xs uppercase tracking-[0.28em] text-slate-400">Overview</p>}
           <div className={`mt-2 space-y-2 ${collapsed ? "flex flex-col items-center" : ""}`}>
-            <Link className={`block rounded-2xl ${collapsed ? "p-2" : "px-3 py-2"} transition hover:bg-sky-50`} to="/admin">{!collapsed ? "Dashboard" : "D"}</Link>
-            <Link className={`block rounded-2xl ${collapsed ? "p-2" : "px-3 py-2"} transition hover:bg-sky-50`} to="/admin/orders">{!collapsed ? "Orders" : "O"}</Link>
-            <Link className={`block rounded-2xl ${collapsed ? "p-2" : "px-3 py-2"} transition hover:bg-sky-50`} to="/admin/users">{!collapsed ? "Users" : "U"}</Link>
-            <Link className={`block rounded-2xl ${collapsed ? "p-2" : "px-3 py-2"} transition hover:bg-sky-50`} to="/admin/profile">{!collapsed ? "Profile" : "P"}</Link>
+            <Link className={`block rounded-2xl ${collapsed ? "p-2" : "px-3 py-2"} transition hover:bg-sky-50`} href="/admin/dashboard">{!collapsed ? "Dashboard" : "D"}</Link>
+            <Link className={`block rounded-2xl ${collapsed ? "p-2" : "px-3 py-2"} transition hover:bg-sky-50`} href="/admin/orders">{!collapsed ? "Orders" : "O"}</Link>
+            <Link className={`block rounded-2xl ${collapsed ? "p-2" : "px-3 py-2"} transition hover:bg-sky-50`} href="/admin/users">{!collapsed ? "Users" : "U"}</Link>
+            <Link className={`block rounded-2xl ${collapsed ? "p-2" : "px-3 py-2"} transition hover:bg-sky-50`} href="/admin/profile">{!collapsed ? "Profile" : "P"}</Link>
           </div>
         </div>
 
         <div>
           {!collapsed && <p className="px-3 text-xs uppercase tracking-[0.28em] text-slate-400">Catalog</p>}
           <div className={`mt-2 space-y-2 ${collapsed ? "flex flex-col items-center" : ""}`}>
-            <Link className={`block rounded-2xl ${collapsed ? "p-2" : "px-3 py-2"} transition hover:bg-sky-50`} to="/admin/products">{!collapsed ? "Products" : "P"}</Link>
-            <Link className={`block rounded-2xl ${collapsed ? "p-2" : "px-3 py-2"} transition hover:bg-sky-50`} to="/admin/settings">{!collapsed ? "Settings" : "S"}</Link>
+            <Link className={`block rounded-2xl ${collapsed ? "p-2" : "px-3 py-2"} transition hover:bg-sky-50`} href="/admin/products">{!collapsed ? "Products" : "P"}</Link>
+            <Link className={`block rounded-2xl ${collapsed ? "p-2" : "px-3 py-2"} transition hover:bg-sky-50`} href="/admin/settings">{!collapsed ? "Settings" : "S"}</Link>
           </div>
         </div>
       </nav>

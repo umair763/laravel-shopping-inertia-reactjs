@@ -1,5 +1,5 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link } from "@inertiajs/react";
 import AuthSplitLayout from "../../shared/ui/auth/auth.split.layout.jsx";
 import LoginForm from "../../features/account/components/login.form.jsx";
 
@@ -26,10 +26,10 @@ export default function AdminLoginPage() {
       accent="violet"
       leftFooter={(
         <div className="flex flex-wrap items-center gap-3 text-sm">
-          <Link className="rounded-full border border-white/15 px-4 py-2 font-semibold text-white transition hover:border-white/30 hover:bg-white/10" to="/auth/admin/register">
+          <Link className="rounded-full border border-white/15 px-4 py-2 font-semibold text-white transition hover:border-white/30 hover:bg-white/10" href="/admin/register">
             Invite an admin
           </Link>
-          <Link className="rounded-full border border-white/15 px-4 py-2 font-semibold text-white/75 transition hover:border-white/30 hover:bg-white/10" to="/store">
+          <Link className="rounded-full border border-white/15 px-4 py-2 font-semibold text-white/75 transition hover:border-white/30 hover:bg-white/10" href="/store">
             Back to store
           </Link>
         </div>
@@ -48,7 +48,7 @@ export default function AdminLoginPage() {
 
         <p className="text-sm text-zinc-500">
           Need to create an admin profile?{" "}
-          <Link className="font-semibold text-violet-600 underline decoration-violet-200 decoration-2 underline-offset-4" to="/auth/admin/register">
+          <Link className="font-semibold text-violet-600 underline decoration-violet-200 decoration-2 underline-offset-4" href="/admin/register">
             Open the admin registration screen
           </Link>
         </p>

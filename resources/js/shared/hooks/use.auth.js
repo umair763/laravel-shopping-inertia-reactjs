@@ -1,6 +1,12 @@
-import { useSelector } from "react-redux";
+import { usePage } from "@inertiajs/react";
 
 export default function useAuth() {
-  const user = useSelector((state) => state.auth.user);
-  return { user, isAuthenticated: Boolean(user), isAdmin: user?.role === "admin" };
+  const page = usePage();
+  const user = page?.props?.auth?.user || null;
+  return {
+    user,
+    isAuthenticated: !!user,
+    isAdmin: user?.role === "admin",
+    isCustomer: user?.role === "customer"
+  };
 }

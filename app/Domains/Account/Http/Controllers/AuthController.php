@@ -120,7 +120,7 @@ class AuthController extends Controller
       ]);
     }
 
-    return redirect()->route('home')->with('success', 'Logged out successfully');
+    return redirect()->route('home');
   }
 
   /**
@@ -158,7 +158,7 @@ class AuthController extends Controller
 
     if ($request->hasFile('profile_image_file')) {
       $path = $request->file('profile_image_file')->storePublicly('profiles', 'public');
-      $validated['profile_image'] = Storage::disk('public')->url($path);
+      $validated['profile_image'] = asset('storage/' . $path);
     }
 
     app(UpdateProfile::class)->handle($user, $validated);
@@ -381,7 +381,11 @@ class AuthController extends Controller
       ], $status);
     }
 
-    return redirect()->route($redirectRoute)->with('success', $message);
+    // Inertia::location() returns a 409 with X-Inertia-Location header.
+    // Inertia's JS responds by doing window.location.href (a full page navigation)
+    // instead of following the redirect as an XHR chain. This guarantees the
+    // newly-saved session cookie is picked up by the browser before the next request.
+    return redirect()->route($redirectRoute);
   }
 
   private function unauthorizedResponse(Request $request, string $message)

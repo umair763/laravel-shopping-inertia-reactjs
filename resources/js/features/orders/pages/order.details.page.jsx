@@ -1,8 +1,10 @@
 import React from "react";
-import { useParams } from "react-router-dom";
 import OrderDetails from "../components/order.details.jsx";
+import StoreLayout from "../../../layouts/store.layout.jsx";
 
-export default function OrderDetailsPage() {
-  const { id } = useParams();
-  return <OrderDetails order={{ id }} />;
+export default function OrderDetailsPage({ order }) {
+  return <OrderDetails order={order} />;
 }
+
+// Default layout for user orders
+OrderDetailsPage.layout = (page) => <StoreLayout>{page}</StoreLayout>;

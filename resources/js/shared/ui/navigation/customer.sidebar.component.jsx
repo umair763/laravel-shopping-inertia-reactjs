@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Link, router } from "@inertiajs/react";
 import useLogout from "../../../features/account/hooks/use.logout.js";
 import { PanelLeftClose, PanelLeftOpen } from "lucide-react";
 
@@ -12,7 +12,7 @@ const items = [
 
 export default function CustomerSidebarComponent() {
   const location = useLocation();
-  const navigate = useNavigate();
+  
   const logout = useLogout();
   const [collapsed, setCollapsed] = useState(false);
 
@@ -37,7 +37,7 @@ export default function CustomerSidebarComponent() {
 
   function handleLogout() {
     logout.mutate(undefined, {
-      onSuccess: () => navigate("/auth/login", { replace: true }),
+      onSuccess: () => router.visit("/auth/login", { replace: true }),
     });
   }
 

@@ -1,5 +1,5 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link } from "@inertiajs/react";
 
 export default function FooterComponent() {
   return (
@@ -24,18 +24,18 @@ export default function FooterComponent() {
           <div>
             <p className="text-xs uppercase tracking-[0.28em] text-slate-400">Shop</p>
             <div className="mt-4 space-y-3 text-sm">
-              <Link className="block transition hover:text-sky-700" to="/store/shop">Browse catalog</Link>
-              <Link className="block transition hover:text-sky-700" to="/store/cart">Cart</Link>
-              <Link className="block transition hover:text-sky-700" to="/account/dashboard">Customer dashboard</Link>
+              <Link className="block transition hover:text-sky-700" href="/store/shop">Browse catalog</Link>
+              <Link className="block transition hover:text-sky-700" href="/store/cart">Cart</Link>
+              <Link className="block transition hover:text-sky-700" href="/account/dashboard">Customer dashboard</Link>
             </div>
           </div>
 
           <div>
             <p className="text-xs uppercase tracking-[0.28em] text-slate-400">Account</p>
             <div className="mt-4 space-y-3 text-sm">
-              <Link className="block transition hover:text-sky-700" to="/auth/login">User sign in</Link>
-              <Link className="block transition hover:text-sky-700" to="/auth/register">Create account</Link>
-              <Link className="block transition hover:text-sky-700" to="/auth/admin/login">Admin sign in</Link>
+              <Link className="block transition hover:text-sky-700" href="/auth/login">User sign in</Link>
+              <Link className="block transition hover:text-sky-700" href="/auth/register">Create account</Link>
+              <Link className="block transition hover:text-sky-700" href="/auth/admin/login">Admin sign in</Link>
             </div>
           </div>
 

@@ -1,6 +1,7 @@
-import { useSelector } from "react-redux";
+import { usePage } from "@inertiajs/react";
 
 export default function usePermission(role) {
-  const userRole = useSelector((state) => state.auth.user?.role);
+  const { props } = usePage();
+  const userRole = props?.auth?.user?.role;
   return userRole === role;
 }

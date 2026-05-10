@@ -1,5 +1,4 @@
 import React, { useEffect } from "react";
-import { Outlet } from "react-router-dom";
 import NavbarComponent from "../shared/ui/navigation/navbar.component.jsx";
 import FooterComponent from "../shared/ui/navigation/footer.component.jsx";
 import Container from "../shared/ui/layout/container.jsx";
@@ -18,7 +17,7 @@ function syncBodyCollapsedFlag() {
   }
 }
 
-export default function DashboardLayout() {
+export default function DashboardLayout({ children }) {
   useEffect(() => {
     syncBodyCollapsedFlag();
     window.addEventListener("storage", syncBodyCollapsedFlag);
@@ -31,7 +30,7 @@ export default function DashboardLayout() {
       <div className="flex-1 lg:flex lg:items-start">
         <SidebarComponent />
         <main className="w-full p-4 lg:p-6" style={{ minHeight: "calc(100vh - 160px)" }}>
-          <Container className="max-w-none px-0 lg:px-0"><Outlet /></Container>
+          <Container className="max-w-none px-0 lg:px-0">{children}</Container>
         </main>
       </div>
       <FooterComponent />

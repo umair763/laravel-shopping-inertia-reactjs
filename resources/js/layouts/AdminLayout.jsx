@@ -1,5 +1,5 @@
 import React from "react";
-import { Outlet } from "react-router-dom";
+
 import NavbarComponent from "../shared/ui/navigation/navbar.component.jsx";
 import SidebarComponent from "../shared/ui/navigation/sidebar.component.jsx";
 import FooterComponent from "../shared/ui/navigation/footer.component.jsx";

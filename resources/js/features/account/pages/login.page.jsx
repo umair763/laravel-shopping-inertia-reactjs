@@ -1,5 +1,5 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link } from "@inertiajs/react";
 import AuthSplitLayout from "../../../shared/ui/auth/auth.split.layout.jsx";
 import LoginForm from "../components/login.form.jsx";
 
@@ -26,10 +26,10 @@ export default function LoginPage() {
       accent="amber"
       leftFooter={(
         <div className="flex flex-wrap items-center gap-3 text-sm">
-          <Link className="rounded-full border border-white/15 px-4 py-2 font-semibold text-white transition hover:border-white/30 hover:bg-white/10" to="/auth/register">
+          <Link className="rounded-full border border-white/15 px-4 py-2 font-semibold text-white transition hover:border-white/30 hover:bg-white/10" href="/register">
             Create an account
           </Link>
-          <Link className="rounded-full border border-white/15 px-4 py-2 font-semibold text-white/75 transition hover:border-white/30 hover:bg-white/10" to="/store/shop">
+          <Link className="rounded-full border border-white/15 px-4 py-2 font-semibold text-white/75 transition hover:border-white/30 hover:bg-white/10" href="/store/shop">
             Browse store
           </Link>
         </div>
@@ -48,7 +48,7 @@ export default function LoginPage() {
 
         <p className="text-sm text-zinc-500">
           Need an account?{" "}
-          <Link className="font-semibold text-sky-600 underline decoration-sky-200 decoration-2 underline-offset-4" to="/auth/register">
+          <Link className="font-semibold text-sky-600 underline decoration-sky-200 decoration-2 underline-offset-4" href="/register">
             Create one now
           </Link>
         </p>

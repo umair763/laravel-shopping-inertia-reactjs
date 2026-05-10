@@ -1,25 +1,24 @@
 import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { Link, router } from "@inertiajs/react";
+import { usePage } from "@inertiajs/react";
 
 export default function NavbarComponent() {
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
-  const navigate = useNavigate();
-  const user = useSelector((state) => state.auth.user);
-  const cartCount = useSelector((state) => state.cart.items.length);
+  const { props } = usePage();
+  const user = props?.auth?.user || null;
+
+  const isAdmin = props?.auth?.is_admin || false;
+
+  function handleLogout() {
+    setOpen(false);
+    router.post("/logout");
+  }
 
   function handleSelect(target) {
     setOpen(false);
-
-    if (target === "user") {
-      return navigate("/auth/login");
-    }
-
-    if (target === "admin") {
-      return navigate("/auth/admin/login");
-    }
-
+    if (target === "user") return router.visit("/login");
+    if (target === "admin") return router.visit("/admin/login");
     return null;
   }
 
@@ -27,7 +26,7 @@ export default function NavbarComponent() {
     event.preventDefault();
     const search = query.trim();
     setOpen(false);
-    navigate(search ? `/store/shop?search=${encodeURIComponent(search)}` : "/store/shop");
+    router.visit(search ? `/?search=${encodeURIComponent(search)}` : "/");
   }
 
   return (
@@ -35,7 +34,7 @@ export default function NavbarComponent() {
       <div className="mx-auto max-w-7xl px-4 py-3 lg:px-6">
         <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:gap-4">
           <div className="flex items-center justify-between gap-4 lg:w-auto">
-            <Link to="/store" className="flex items-center gap-3">
+            <Link href="/" className="flex items-center gap-3">
               <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-sky-500 text-lg font-black text-white shadow-lg shadow-sky-200">
                 BD
               </div>
@@ -70,7 +69,7 @@ export default function NavbarComponent() {
           <div className="flex items-center justify-end gap-2">
             <Link
               className="flex h-11 w-11 items-center justify-center rounded-full border border-sky-100 bg-white text-sky-700 transition hover:border-sky-200 hover:bg-sky-50"
-              to="/store/cart"
+              href="/"
               aria-label="Cart"
             >
               <span className="text-lg">🛒</span>
@@ -89,16 +88,39 @@ export default function NavbarComponent() {
               </button>
 
               {open ? (
-                <div className="absolute right-0 mt-3 w-56 overflow-hidden rounded-3xl border border-sky-100 bg-white p-2 shadow-[0_30px_80px_-25px_rgba(15,23,42,0.22)]">
+                <div className="absolute right-0 mt-3 w-60 overflow-hidden rounded-3xl border border-sky-100 bg-white p-2 shadow-[0_30px_80px_-25px_rgba(15,23,42,0.22)]">
                   <div className="rounded-2xl bg-sky-50 p-3 text-sm text-slate-600">
-                    Choose the workspace you want to enter.
+                    {user ? (
+                      <span className="font-medium text-slate-800">{user.name || user.email}</span>
+                    ) : (
+                      "Choose the workspace you want to enter."
+                    )}
                   </div>
-                  <button type="button" onClick={() => handleSelect("user")} className="mt-2 w-full rounded-2xl px-4 py-3 text-left text-sm font-semibold text-slate-800 transition hover:bg-sky-50">
-                    User
-                  </button>
-                  <button type="button" onClick={() => handleSelect("admin")} className="w-full rounded-2xl px-4 py-3 text-left text-sm font-semibold text-slate-800 transition hover:bg-sky-50">
-                    Admin
-                  </button>
+
+                  {user ? (
+                    <>
+                      <Link href="/orders" onClick={() => setOpen(false)} className="mt-2 block w-full rounded-2xl px-4 py-3 text-left text-sm font-semibold text-slate-800 transition hover:bg-sky-50">
+                        My Orders
+                      </Link>
+                      {isAdmin && (
+                        <Link href="/admin/dashboard" onClick={() => setOpen(false)} className="block w-full rounded-2xl px-4 py-3 text-left text-sm font-semibold text-sky-700 transition hover:bg-sky-50">
+                          Admin Dashboard
+                        </Link>
+                      )}
+                      <button type="button" onClick={handleLogout} className="w-full rounded-2xl px-4 py-3 text-left text-sm font-semibold text-red-600 transition hover:bg-red-50">
+                        Sign out
+                      </button>
+                    </>
+                  ) : (
+                    <>
+                      <button type="button" onClick={() => handleSelect("user")} className="mt-2 w-full rounded-2xl px-4 py-3 text-left text-sm font-semibold text-slate-800 transition hover:bg-sky-50">
+                        User Sign In
+                      </button>
+                      <button type="button" onClick={() => handleSelect("admin")} className="w-full rounded-2xl px-4 py-3 text-left text-sm font-semibold text-slate-800 transition hover:bg-sky-50">
+                        Admin Sign In
+                      </button>
+                    </>
+                  )}
                 </div>
               ) : null}
             </div>

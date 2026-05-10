@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { Outlet } from "react-router-dom";
+
 import NavbarComponent from "../shared/ui/navigation/navbar.component.jsx";
 import FooterComponent from "../shared/ui/navigation/footer.component.jsx";
 import CustomerSidebarComponent from "../shared/ui/navigation/customer.sidebar.component.jsx";
@@ -17,7 +17,7 @@ function syncCustomerCollapsedFlag() {
   }
 }
 
-export default function CustomerLayout() {
+export default function CustomerLayout({ children }) {
   useEffect(() => {
     syncCustomerCollapsedFlag();
     window.addEventListener("storage", syncCustomerCollapsedFlag);
@@ -30,7 +30,7 @@ export default function CustomerLayout() {
       <div className="flex-1 mx-auto max-w-7xl w-full gap-6 px-4 py-6 lg:flex lg:px-6 lg:py-8">
         <CustomerSidebarComponent />
         <main className="min-w-0 flex-1">
-          <Outlet />
+          {children}
         </main>
       </div>
       <FooterComponent />
