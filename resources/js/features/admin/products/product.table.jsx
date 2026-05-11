@@ -42,25 +42,41 @@ export default function ProductTable({ products }) {
 
 				{items.length ? (
 					<div className="divide-y divide-slate-100">
-						{items.map((product) => (
-							<div key={product.id} className="flex flex-col gap-3 px-4 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-6">
-								<div>
-									<p className="text-sm font-semibold text-slate-900">{product.name}</p>
-									<p className="text-xs text-slate-500">SKU: {product.sku}</p>
+						{items.map((product) => {
+							const variant = product.variants?.[0];
+							const price = variant?.discount_price ?? variant?.price;
+							const stock = variant?.inventory?.available_quantity ?? variant?.stock_quantity;
+							return (
+								<div key={product.id} className="flex flex-col gap-3 px-4 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-6">
+									<div className="min-w-0">
+										<p className="text-sm font-semibold text-slate-900">{product.name}</p>
+										<p className="mt-0.5 text-xs text-slate-500">
+											SKU: {product.sku}
+											{product.catalogue?.name ? <span className="ml-2 rounded-full bg-sky-50 px-2 py-0.5 text-[10px] uppercase tracking-wider text-sky-700">{product.catalogue.name}</span> : null}
+											{product.category?.name ? <span className="ml-2 rounded-full bg-slate-100 px-2 py-0.5 text-[10px] uppercase tracking-wider text-slate-600">{product.category.name}</span> : null}
+											<span className="ml-2 rounded-full bg-emerald-50 px-2 py-0.5 text-[10px] uppercase tracking-wider text-emerald-700">{product.status}</span>
+										</p>
+									</div>
+									<div className="flex items-center gap-4">
+										<div className="hidden text-right text-xs text-slate-600 sm:block">
+											<p className="font-semibold text-slate-900">{price != null ? `$${Number(price).toFixed(2)}` : "—"}</p>
+											<p>Stock: {stock ?? 0}</p>
+										</div>
+										<div className="flex gap-2">
+											<Link className="rounded-xl border border-slate-200 px-3 py-2 text-sm" href={`/admin/products/${product.id}/edit`}>
+												Edit
+											</Link>
+											<button className="rounded-xl border border-rose-200 bg-rose-50 px-3 py-2 text-sm text-rose-700" type="button" onClick={() => confirmDelete(product)}>
+												Delete
+											</button>
+										</div>
+									</div>
 								</div>
-								<div className="flex gap-2">
-									<Link className="rounded-xl border border-slate-200 px-3 py-2 text-sm" href={`/admin/products/${product.id}/edit`}>
-										Edit
-									</Link>
-									<button className="rounded-xl border border-rose-200 bg-rose-50 px-3 py-2 text-sm text-rose-700" type="button" onClick={() => confirmDelete(product)}>
-										Delete
-									</button>
-								</div>
-							</div>
-						))}
+							);
+						})}
 					</div>
 				) : (
-					<div className="p-6 text-sm text-slate-500">No products found.</div>
+					<div className="p-6 text-sm text-slate-500">No products yet. <Link href="/admin/products/create" className="font-semibold text-sky-600">Create your first product</Link>.</div>
 				)}
 			</div>
 

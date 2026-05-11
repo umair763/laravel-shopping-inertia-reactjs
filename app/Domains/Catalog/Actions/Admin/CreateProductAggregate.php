@@ -6,12 +6,19 @@ use App\Domains\Catalog\Models\Inventory;
 use App\Domains\Catalog\Models\Product;
 use App\Domains\Catalog\Models\ProductImage;
 use App\Domains\Catalog\Models\ProductVariant;
+use App\Domains\Shared\Services\ImageUploadService;
+use App\Domains\Shared\Services\SlugGenerator;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Storage;
 
 class CreateProductAggregate
 {
+  public function __construct(
+    private SlugGenerator $slugs,
+    private ImageUploadService $images,
+  ) {
+  }
+
   public function handle(array $data): Product
   {
     return DB::transaction(function () use ($data) {
@@ -19,7 +26,7 @@ class CreateProductAggregate
         'catalogue_id' => $data['catalogue_id'] ?? null,
         'category_id' => $data['category_id'] ?? null,
         'name' => $data['name'],
-        'slug' => $data['slug'],
+        'slug' => $this->slugs->generate($data['name'], Product::class),
         'short_description' => $data['short_description'] ?? null,
         'description' => $data['description'] ?? null,
         'brand' => $data['brand'] ?? null,
@@ -74,14 +81,10 @@ class CreateProductAggregate
   private function resolveImageUrl(array $image): ?string
   {
     if (!empty($image['image_file']) && $image['image_file'] instanceof UploadedFile) {
-      $path = $image['image_file']->storePublicly('products', 'public');
-
-      return Storage::disk('public')->url($path);
+      return $this->images->store($image['image_file'], 'products');
     }
 
-    $imageUrl = trim((string) ($image['image_url'] ?? ''));
-
-    return $imageUrl !== '' ? $imageUrl : null;
+    return null;
   }
 }
 

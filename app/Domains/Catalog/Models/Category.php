@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 #[Fillable([
   'catalogue_id',
@@ -26,4 +27,14 @@ class Category extends Model
   const UPDATED_AT = null;
 
   const CREATED_AT = 'created_at';
+
+  public function catalogue(): BelongsTo
+  {
+    return $this->belongsTo(Catalogue::class);
+  }
+
+  public function parent(): BelongsTo
+  {
+    return $this->belongsTo(Category::class, 'parent_category_id');
+  }
 }

@@ -14,9 +14,26 @@ use App\Domains\Cart\Models\CartItem;
 use App\Domains\Orders\Actions\CreateOrderFromCart;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
 
 class CartController extends Controller
 {
+  public function page(Request $request)
+  {
+    $cart = app(GetOrCreateActiveCart::class)->handle($request->user());
+    $cart->load('items.product', 'items.variant.images', 'items.variant.inventory');
+    $cart = app(RecalculateCartTotals::class)->handle($cart);
+
+    $addresses = \App\Domains\Account\Models\UserAddress::where('user_id', $request->user()->id)
+      ->orderByDesc('is_default')
+      ->get();
+
+    return Inertia::render('User/Cart', [
+      'cart' => $cart,
+      'addresses' => $addresses,
+    ]);
+  }
+
   public function show(Request $request)
   {
     $cart = app(GetOrCreateActiveCart::class)->handle($request->user());

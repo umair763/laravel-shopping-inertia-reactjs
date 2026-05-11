@@ -17,7 +17,6 @@ class CreateProductRequest extends FormRequest
       'catalogue_id' => 'nullable|exists:catalogues,id',
       'category_id' => 'nullable|exists:categories,id',
       'name' => 'required|string|max:255',
-      'slug' => 'required|string|max:255|unique:products,slug',
       'short_description' => 'nullable|string',
       'description' => 'nullable|string',
       'brand' => 'nullable|string|max:255',
@@ -44,8 +43,7 @@ class CreateProductRequest extends FormRequest
       'inventory.low_stock_threshold' => 'nullable|integer|min:0',
 
       'images' => 'nullable|array',
-      'images.*.image_url' => 'nullable|url',
-      'images.*.image_file' => 'nullable|image|max:4096',
+      'images.*.image_file' => 'required|image|mimes:jpg,jpeg,png,webp,gif,svg|max:8192',
       'images.*.is_primary' => 'nullable|boolean',
       'images.*.sort_order' => 'nullable|integer|min:0',
     ];

@@ -17,9 +17,9 @@ class UpdateCategoryRequest extends FormRequest
       'catalogue_id' => 'sometimes|nullable|exists:catalogues,id',
       'parent_category_id' => 'sometimes|nullable|exists:categories,id',
       'name' => 'sometimes|string|max:255',
-      'slug' => 'sometimes|string|max:255',
       'description' => 'sometimes|nullable|string',
-      'image' => 'sometimes|nullable|string',
+      'image' => 'sometimes|nullable|image|mimes:jpg,jpeg,png,webp,gif,svg|max:8192',
+      'image_remove' => 'sometimes|boolean',
     ];
   }
 }

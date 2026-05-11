@@ -69,7 +69,7 @@ export default function NavbarComponent() {
           <div className="flex items-center justify-end gap-2">
             <Link
               className="flex h-11 w-11 items-center justify-center rounded-full border border-sky-100 bg-white text-sky-700 transition hover:border-sky-200 hover:bg-sky-50"
-              href="/"
+              href={user ? "/cart" : "/login"}
               aria-label="Cart"
             >
               <span className="text-lg">🛒</span>

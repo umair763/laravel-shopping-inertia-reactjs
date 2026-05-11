@@ -6,29 +6,46 @@ use App\Domains\Catalog\Models\Inventory;
 use App\Domains\Catalog\Models\Product;
 use App\Domains\Catalog\Models\ProductImage;
 use App\Domains\Catalog\Models\ProductVariant;
+use App\Domains\Shared\Services\ImageUploadService;
+use App\Domains\Shared\Services\SlugGenerator;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Storage;
 
 class UpdateProductAggregate
 {
+  public function __construct(
+    private SlugGenerator $slugs,
+    private ImageUploadService $images,
+  ) {
+  }
+
   public function handle(Product $product, array $data): Product
   {
     return DB::transaction(function () use ($product, $data) {
-      $product->update(array_filter([
-        'catalogue_id' => $data['catalogue_id'] ?? null,
-        'category_id' => $data['category_id'] ?? null,
-        'name' => $data['name'] ?? null,
-        'slug' => $data['slug'] ?? null,
-        'short_description' => $data['short_description'] ?? null,
-        'description' => $data['description'] ?? null,
-        'brand' => $data['brand'] ?? null,
-        'sku' => $data['sku'] ?? null,
-        'status' => $data['status'] ?? null,
-        'is_featured' => $data['is_featured'] ?? null,
-        'seo_title' => $data['seo_title'] ?? null,
-        'seo_description' => $data['seo_description'] ?? null,
-      ], fn($v) => $v !== null));
+      $payload = [];
+      foreach ([
+        'catalogue_id',
+        'category_id',
+        'name',
+        'short_description',
+        'description',
+        'brand',
+        'sku',
+        'status',
+        'is_featured',
+        'seo_title',
+        'seo_description',
+      ] as $key) {
+        if (array_key_exists($key, $data)) {
+          $payload[$key] = $data[$key];
+        }
+      }
+
+      if (array_key_exists('name', $data) && $data['name'] !== $product->name) {
+        $payload['slug'] = $this->slugs->generate($data['name'], Product::class, $product->id);
+      }
+
+      $product->update($payload);
 
       if (!empty($data['variant'])) {
         /** @var ProductVariant $variant */
@@ -55,21 +72,7 @@ class UpdateProductAggregate
         }
 
         if (array_key_exists('images', $data) && is_array($data['images'])) {
-          ProductImage::where('variant_id', $variant->id)->delete();
-          foreach ($data['images'] as $idx => $img) {
-            $imageUrl = $this->resolveImageUrl($img);
-
-            if (!$imageUrl) {
-              continue;
-            }
-
-            ProductImage::create([
-              'variant_id' => $variant->id,
-              'image_url' => $imageUrl,
-              'is_primary' => (bool) ($img['is_primary'] ?? ($idx === 0)),
-              'sort_order' => (int) ($img['sort_order'] ?? $idx),
-            ]);
-          }
+          $this->reconcileImages($variant, $data['images']);
         }
       }
 
@@ -77,17 +80,51 @@ class UpdateProductAggregate
     });
   }
 
-  private function resolveImageUrl(array $image): ?string
+  /**
+   * Replace the variant's image set with the submitted list.
+   * Each row is either an uploaded image_file (new) or an existing_url (retain).
+   * Previously stored URLs that aren't retained are deleted from disk.
+   */
+  private function reconcileImages(ProductVariant $variant, array $rows): void
   {
-    if (!empty($image['image_file']) && $image['image_file'] instanceof UploadedFile) {
-      $path = $image['image_file']->storePublicly('products', 'public');
-
-      return Storage::disk('public')->url($path);
+    $retainUrls = [];
+    foreach ($rows as $row) {
+      $existing = trim((string) ($row['existing_url'] ?? ''));
+      if ($existing !== '') {
+        $retainUrls[] = $existing;
+      }
     }
 
-    $imageUrl = trim((string) ($image['image_url'] ?? ''));
+    // Delete previous rows whose URL is not retained; also remove their files.
+    foreach (ProductImage::where('variant_id', $variant->id)->get() as $old) {
+      if (!in_array($old->image_url, $retainUrls, true)) {
+        $this->images->deleteByUrl($old->image_url);
+        $old->delete();
+      }
+    }
 
-    return $imageUrl !== '' ? $imageUrl : null;
+    // Re-create the desired set in the submitted order.
+    ProductImage::where('variant_id', $variant->id)->delete();
+
+    foreach ($rows as $idx => $row) {
+      $url = null;
+      if (!empty($row['image_file']) && $row['image_file'] instanceof UploadedFile) {
+        $url = $this->images->store($row['image_file'], 'products');
+      } elseif (!empty($row['existing_url'])) {
+        $url = $row['existing_url'];
+      }
+
+      if (!$url) {
+        continue;
+      }
+
+      ProductImage::create([
+        'variant_id' => $variant->id,
+        'image_url' => $url,
+        'is_primary' => (bool) ($row['is_primary'] ?? ($idx === 0)),
+        'sort_order' => (int) ($row['sort_order'] ?? $idx),
+      ]);
+    }
   }
 }
 

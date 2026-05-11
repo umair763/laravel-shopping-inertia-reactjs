@@ -15,10 +15,9 @@ class CreateCatalogueRequest extends FormRequest
   {
     return [
       'name' => 'required|string|max:255',
-      'slug' => 'required|string|max:255|unique:catalogues,slug',
       'description' => 'nullable|string',
-      'icon' => 'nullable|string',
-      'cover_image' => 'nullable|string',
+      'icon' => 'nullable|image|mimes:jpg,jpeg,png,webp,gif,svg|max:8192',
+      'cover_image' => 'nullable|image|mimes:jpg,jpeg,png,webp,gif,svg|max:8192',
       'is_featured' => 'nullable|boolean',
       'sort_order' => 'nullable|integer',
       'status' => 'nullable|string|max:50',

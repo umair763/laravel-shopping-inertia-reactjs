@@ -60,6 +60,8 @@ export default function SidebarComponent() {
         <div>
           {!collapsed && <p className="px-3 text-xs uppercase tracking-[0.28em] text-slate-400">Catalog</p>}
           <div className={`mt-2 space-y-2 ${collapsed ? "flex flex-col items-center" : ""}`}>
+            <Link className={`block rounded-2xl ${collapsed ? "p-2" : "px-3 py-2"} transition hover:bg-sky-50`} href="/admin/catalogues">{!collapsed ? "Catalogues" : "C"}</Link>
+            <Link className={`block rounded-2xl ${collapsed ? "p-2" : "px-3 py-2"} transition hover:bg-sky-50`} href="/admin/categories">{!collapsed ? "Categories" : "K"}</Link>
             <Link className={`block rounded-2xl ${collapsed ? "p-2" : "px-3 py-2"} transition hover:bg-sky-50`} href="/admin/products">{!collapsed ? "Products" : "P"}</Link>
             <Link className={`block rounded-2xl ${collapsed ? "p-2" : "px-3 py-2"} transition hover:bg-sky-50`} href="/admin/settings">{!collapsed ? "Settings" : "S"}</Link>
           </div>

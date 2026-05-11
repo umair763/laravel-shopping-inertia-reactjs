@@ -1,27 +1,40 @@
 import React from "react";
-import StatsCards from "./stats.cards.jsx";
-import RevenueChart from "./revenue.chart.jsx";
-import ActivityFeed from "./activity.feed.jsx";
 import DashboardLayout from "../../../layouts/dashboard.layout.jsx";
+import KpiCards from "./widgets/kpi.cards.jsx";
+import OrdersChart from "./widgets/orders.chart.jsx";
+import TrendingProducts from "./widgets/trending.products.jsx";
+import {
+  InventoryAlertsPanel,
+  PaymentAnalyticsPanel,
+  RecentOrdersPanel,
+  SalesByCategoryPanel,
+  TopCustomersPanel,
+} from "./widgets/side.panels.jsx";
 
-export default function DashboardPage({ stats }) {
-    const recentOrders = stats?.recent_orders ?? [];
+export default function DashboardPage() {
+  return (
+    <section className="space-y-6">
+      <header className="flex flex-col gap-1">
+        <p className="text-[10px] uppercase tracking-[0.34em] text-slate-400">Admin workspace</p>
+        <h1 className="text-3xl font-black tracking-tight text-slate-900">Dashboard</h1>
+        <p className="text-sm text-slate-500">Real-time KPIs and analytics across orders, products, customers, and payments.</p>
+      </header>
 
-    return (
-        <section className="space-y-6">
-            <div>
-                <p className="text-[10px] uppercase tracking-[0.34em] text-slate-400">
-                    Admin workspace
-                </p>
-                <h1 className="mt-1 text-3xl font-black tracking-tight text-slate-900">
-                    Dashboard
-                </h1>
-            </div>
-            <StatsCards stats={stats} />
-            <RevenueChart stats={stats} />
-            <ActivityFeed orders={recentOrders} />
-        </section>
-    );
+      <KpiCards />
+
+      <OrdersChart />
+
+      <TrendingProducts />
+
+      <div className="grid gap-4 lg:grid-cols-2">
+        <RecentOrdersPanel />
+        <InventoryAlertsPanel />
+        <SalesByCategoryPanel />
+        <TopCustomersPanel />
+        <PaymentAnalyticsPanel />
+      </div>
+    </section>
+  );
 }
 
 DashboardPage.layout = (page) => <DashboardLayout>{page}</DashboardLayout>;

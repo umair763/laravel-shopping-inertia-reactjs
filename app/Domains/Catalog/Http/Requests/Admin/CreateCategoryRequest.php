@@ -17,9 +17,8 @@ class CreateCategoryRequest extends FormRequest
       'catalogue_id' => 'nullable|exists:catalogues,id',
       'parent_category_id' => 'nullable|exists:categories,id',
       'name' => 'required|string|max:255',
-      'slug' => 'required|string|max:255|unique:categories,slug',
       'description' => 'nullable|string',
-      'image' => 'nullable|string',
+      'image' => 'nullable|image|mimes:jpg,jpeg,png,webp,gif,svg|max:8192',
     ];
   }
 }
