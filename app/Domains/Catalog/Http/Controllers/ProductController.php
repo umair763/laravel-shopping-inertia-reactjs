@@ -35,14 +35,31 @@ class ProductController extends Controller
   }
 
   /**
-   * Show single product detail page
+   * Show single product detail page — loads reviews with eager-loaded user data
    */
   public function show(Product $product)
   {
     $loaded = app(GetActiveProduct::class)->handle($product);
 
+    $reviews = $loaded->reviews()
+      ->with('user:id,first_name,last_name,email')
+      ->latest()
+      ->get()
+      ->map(fn ($review) => [
+        'id' => $review->id,
+        'rating' => $review->rating,
+        'title' => $review->title,
+        'comment' => $review->comment,
+        'created_at' => $review->created_at,
+        'user' => $review->user ? [
+          'name' => trim(($review->user->first_name ?? '') . ' ' . ($review->user->last_name ?? '')) ?: null,
+          'email' => $review->user->email,
+        ] : null,
+      ]);
+
     return Inertia::render('User/ViewProduct', [
       'product' => app(PresentProductForStorefront::class)->handle($loaded),
+      'reviews' => $reviews,
     ]);
   }
 

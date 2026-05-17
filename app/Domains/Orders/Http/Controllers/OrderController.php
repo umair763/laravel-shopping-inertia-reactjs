@@ -25,15 +25,22 @@ class OrderController extends Controller
   }
 
   /**
-   * Show single order details
+   * Show single order details — loads all relations needed for the detail view
    */
   public function show(Order $order)
   {
-    // Authorize user can only view their own orders
     $this->authorize('view', $order);
 
+    $order->load([
+      'items.product',
+      'items.variant',
+      'shippingAddress',
+      'payment',
+      'user:id,first_name,last_name,email',
+    ]);
+
     return Inertia::render('User/OrderDetail', [
-      'order' => $order->load('items.product'),
+      'order' => $order,
     ]);
   }
 
@@ -99,7 +106,7 @@ class OrderController extends Controller
     $this->authorize('view', $order);
 
     return response()->json([
-      'data' => $order->load('items.product'),
+      'data' => $order->load(['items.product', 'items.variant', 'shippingAddress', 'payment']),
       'success' => true,
     ]);
   }

@@ -3,7 +3,11 @@
 namespace Database\Seeders;
 
 use App\Domains\Catalog\Models\Product;
+use App\Domains\Catalog\Models\ProductVariant;
+use App\Domains\Catalog\Models\ProductImage;
+use App\Domains\Catalog\Models\Inventory;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Str;
 
 class ProductSeeder extends Seeder
 {
@@ -19,9 +23,7 @@ class ProductSeeder extends Seeder
         'price' => 199.99,
         'quantity' => 50,
         'sku' => 'WH-PRO-001',
-        'category' => 'electronics',
         'image_url' => 'https://via.placeholder.com/300?text=Wireless+Headphones',
-        'is_active' => true,
       ],
       [
         'name' => 'Mechanical Keyboard RGB',
@@ -29,9 +31,7 @@ class ProductSeeder extends Seeder
         'price' => 149.99,
         'quantity' => 75,
         'sku' => 'KB-RGB-001',
-        'category' => 'electronics',
         'image_url' => 'https://via.placeholder.com/300?text=Mechanical+Keyboard',
-        'is_active' => true,
       ],
       [
         'name' => '4K Webcam',
@@ -39,9 +39,7 @@ class ProductSeeder extends Seeder
         'price' => 89.99,
         'quantity' => 40,
         'sku' => 'WC-4K-001',
-        'category' => 'electronics',
         'image_url' => 'https://via.placeholder.com/300?text=4K+Webcam',
-        'is_active' => true,
       ],
       [
         'name' => 'Smart Watch Ultra',
@@ -49,9 +47,7 @@ class ProductSeeder extends Seeder
         'price' => 299.99,
         'quantity' => 35,
         'sku' => 'SW-ULTRA-001',
-        'category' => 'electronics',
         'image_url' => 'https://via.placeholder.com/300?text=Smart+Watch',
-        'is_active' => true,
       ],
       [
         'name' => 'Classic Cotton T-Shirt',
@@ -59,9 +55,7 @@ class ProductSeeder extends Seeder
         'price' => 24.99,
         'quantity' => 200,
         'sku' => 'TS-COTTON-001',
-        'category' => 'fashion',
         'image_url' => 'https://via.placeholder.com/300?text=Cotton+T-Shirt',
-        'is_active' => true,
       ],
       [
         'name' => 'Designer Jeans',
@@ -69,9 +63,7 @@ class ProductSeeder extends Seeder
         'price' => 79.99,
         'quantity' => 100,
         'sku' => 'JN-DSGNR-001',
-        'category' => 'fashion',
         'image_url' => 'https://via.placeholder.com/300?text=Designer+Jeans',
-        'is_active' => true,
       ],
       [
         'name' => 'Leather Jacket',
@@ -79,9 +71,7 @@ class ProductSeeder extends Seeder
         'price' => 249.99,
         'quantity' => 25,
         'sku' => 'JK-LTH-001',
-        'category' => 'fashion',
         'image_url' => 'https://via.placeholder.com/300?text=Leather+Jacket',
-        'is_active' => true,
       ],
       [
         'name' => 'Running Shoes Pro',
@@ -89,9 +79,7 @@ class ProductSeeder extends Seeder
         'price' => 119.99,
         'quantity' => 80,
         'sku' => 'SH-RUN-001',
-        'category' => 'sports',
         'image_url' => 'https://via.placeholder.com/300?text=Running+Shoes',
-        'is_active' => true,
       ],
       [
         'name' => 'Yoga Mat Premium',
@@ -99,9 +87,7 @@ class ProductSeeder extends Seeder
         'price' => 49.99,
         'quantity' => 60,
         'sku' => 'YM-PREM-001',
-        'category' => 'sports',
         'image_url' => 'https://via.placeholder.com/300?text=Yoga+Mat',
-        'is_active' => true,
       ],
       [
         'name' => 'Dumbbells Set 20kg',
@@ -109,9 +95,7 @@ class ProductSeeder extends Seeder
         'price' => 149.99,
         'quantity' => 30,
         'sku' => 'DB-20KG-001',
-        'category' => 'sports',
         'image_url' => 'https://via.placeholder.com/300?text=Dumbbells+Set',
-        'is_active' => true,
       ],
       [
         'name' => 'The Clean Code Book',
@@ -119,9 +103,7 @@ class ProductSeeder extends Seeder
         'price' => 39.99,
         'quantity' => 45,
         'sku' => 'BK-CLEAN-001',
-        'category' => 'books',
         'image_url' => 'https://via.placeholder.com/300?text=Clean+Code+Book',
-        'is_active' => true,
       ],
       [
         'name' => 'Design Patterns Book',
@@ -129,9 +111,7 @@ class ProductSeeder extends Seeder
         'price' => 49.99,
         'quantity' => 35,
         'sku' => 'BK-DPAT-001',
-        'category' => 'books',
         'image_url' => 'https://via.placeholder.com/300?text=Design+Patterns',
-        'is_active' => true,
       ],
       [
         'name' => 'Ceramic Coffee Mug Set',
@@ -139,9 +119,7 @@ class ProductSeeder extends Seeder
         'price' => 34.99,
         'quantity' => 90,
         'sku' => 'MG-CER-001',
-        'category' => 'home',
         'image_url' => 'https://via.placeholder.com/300?text=Coffee+Mugs',
-        'is_active' => true,
       ],
       [
         'name' => 'Desk Lamp LED',
@@ -149,9 +127,7 @@ class ProductSeeder extends Seeder
         'price' => 59.99,
         'quantity' => 55,
         'sku' => 'LP-LED-001',
-        'category' => 'home',
         'image_url' => 'https://via.placeholder.com/300?text=Desk+Lamp',
-        'is_active' => true,
       ],
       [
         'name' => 'Wall Clock Modern',
@@ -159,14 +135,47 @@ class ProductSeeder extends Seeder
         'price' => 44.99,
         'quantity' => 70,
         'sku' => 'CK-MOD-001',
-        'category' => 'home',
         'image_url' => 'https://via.placeholder.com/300?text=Wall+Clock',
-        'is_active' => true,
       ],
     ];
 
-    foreach ($products as $product) {
-      Product::create($product);
+    foreach ($products as $productData) {
+      // Create the product
+      $product = Product::create([
+        'name' => $productData['name'],
+        'slug' => Str::slug($productData['name']),
+        'description' => $productData['description'],
+        'short_description' => substr($productData['description'], 0, 100),
+        'sku' => $productData['sku'],
+        'status' => 'active', // Set to 'active' so it shows up
+        'is_featured' => false,
+      ]);
+
+      // Create a product variant with price and stock
+      $variant = ProductVariant::create([
+        'product_id' => $product->id,
+        'name' => 'Standard',
+        'sku' => $productData['sku'] . '-V1',
+        'price' => $productData['price'],
+        'stock_quantity' => $productData['quantity'],
+        'status' => 'active',
+      ]);
+
+      // Create inventory record for the variant
+      Inventory::create([
+        'variant_id' => $variant->id,
+        'available_quantity' => $productData['quantity'],
+        'reserved_quantity' => 0,
+        'low_stock_threshold' => 5,
+      ]);
+
+      // Create product image
+      ProductImage::create([
+        'variant_id' => $variant->id,
+        'image_url' => $productData['image_url'],
+        'is_primary' => true,
+        'sort_order' => 0,
+      ]);
     }
   }
 }

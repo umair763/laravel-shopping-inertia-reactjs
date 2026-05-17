@@ -58,5 +58,16 @@ class ReviewController extends Controller
       'success' => true,
     ]);
   }
+
+  public function destroy(Review $review)
+  {
+    if ($review->user_id !== auth()->id()) {
+      abort(403);
+    }
+
+    $review->delete();
+
+    return response()->json(['success' => true], 200);
+  }
 }
 

@@ -97,6 +97,7 @@ Route::middleware(['api', 'force.json'])->group(function () {
     // Account admin
     Route::get('/users', [UserAdminController::class, 'index'])->name('api.admin.users.index');
     Route::post('/users', [UserAdminController::class, 'store'])->name('api.admin.users.store');
+    Route::delete('/users/{user}', [UserAdminController::class, 'destroy'])->name('api.admin.users.destroy');
 
     // Catalog admin
     Route::post('/products', [ProductAdminController::class, 'store'])->name('api.admin.products.store');

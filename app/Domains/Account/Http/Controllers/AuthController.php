@@ -221,7 +221,7 @@ class AuthController extends Controller
       ? 'Admin user created successfully'
       : 'User registered successfully';
 
-    $redirectRoute = $role === 'admin' ? 'admin.dashboard' : 'user.home';
+    $redirectRoute = $role === 'admin' ? 'admin.dashboard' : 'account.dashboard';
 
     return $this->successResponse($request, $message, $user, $redirectRoute, 201);
   }
@@ -273,7 +273,7 @@ class AuthController extends Controller
     Auth::login($user);
     $request->session()->regenerate();
 
-    $redirectRoute = $role === 'admin' ? 'admin.dashboard' : 'user.home';
+    $redirectRoute = $role === 'admin' ? 'admin.dashboard' : 'account.dashboard';
 
     return $this->successResponse($request, 'Logged in successfully', $user, $redirectRoute);
   }

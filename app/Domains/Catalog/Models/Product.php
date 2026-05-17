@@ -3,6 +3,7 @@
 namespace App\Domains\Catalog\Models;
 
 use App\Domains\Orders\Models\OrderItem;
+use App\Domains\Reviews\Models\Review;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -47,12 +48,14 @@ class Product extends Model
     return $this->hasMany(ProductVariant::class);
   }
 
-  /**
-   * Get the order items for this product
-   */
   public function orderItems(): HasMany
   {
     return $this->hasMany(OrderItem::class);
+  }
+
+  public function reviews(): HasMany
+  {
+    return $this->hasMany(Review::class)->latest()->with('user:id,first_name,last_name,email');
   }
 
   public function isActive(): bool

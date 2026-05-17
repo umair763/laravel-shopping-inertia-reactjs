@@ -4,6 +4,8 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use App\Domains\Account\Http\Controllers\AuthController;
 use App\Domains\Account\Http\Controllers\UserAddressController;
+use App\Domains\Account\Http\Controllers\CustomerPortalController;
+use App\Domains\Account\Http\Controllers\Admin\AdminProfileController;
 use App\Domains\Catalog\Http\Controllers\ProductController;
 use App\Domains\Catalog\Http\Controllers\Admin\CatalogueAdminController;
 use App\Domains\Catalog\Http\Controllers\Admin\CategoryAdminController;
@@ -14,6 +16,7 @@ use App\Domains\Orders\Http\Controllers\AdminAnalyticsController;
 use App\Domains\Orders\Http\Controllers\AdminDashboardController;
 use App\Domains\Payments\Http\Controllers\PaymentController;
 use App\Domains\Reviews\Http\Controllers\ReviewController;
+use App\Domains\Account\Http\Controllers\Admin\UserAdminController;
 
 /*
 |--------------------------------------------------------------------------
@@ -35,7 +38,6 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('auth.logout');
 // Default home page - User Products View
 Route::get('/', [ProductController::class, 'index'])->name('home');
 
-// Welcome page (optional)
 Route::get('/welcome', function () {
     return Inertia::render('Welcome');
 });
@@ -52,11 +54,22 @@ Route::middleware(['auth'])->group(function () {
     // User Home - Products Listing
     Route::get('/home', [ProductController::class, 'index'])->name('user.home');
 
-    // Products page (same as home but for navigation)
+    // Products page
     Route::get('/products', [ProductController::class, 'index'])->name('user.products');
-
-    // View single product
     Route::get('/products/{product}', [ProductController::class, 'show'])->name('user.products.show');
+
+    // ── Customer Portal ──────────────────────────────────────────────
+    Route::prefix('account')->name('account.')->group(function () {
+        Route::get('/dashboard', [CustomerPortalController::class, 'dashboard'])->name('dashboard');
+        Route::get('/profile',   [CustomerPortalController::class, 'profile'])->name('profile');
+        Route::get('/reviews',   [CustomerPortalController::class, 'reviews'])->name('reviews');
+        Route::get('/history',   [CustomerPortalController::class, 'history'])->name('history');
+        Route::get('/settings',  [CustomerPortalController::class, 'settings'])->name('settings');
+
+        // Profile & password update (session-authenticated JSON endpoints)
+        Route::put('/profile',  [AuthController::class, 'updateProfile'])->name('profile.update');
+        Route::post('/password', [CustomerPortalController::class, 'changePassword'])->name('password.change');
+    });
 
     // Orders
     Route::get('/orders', [OrderController::class, 'index'])->name('user.orders');
@@ -78,6 +91,7 @@ Route::middleware(['auth'])->group(function () {
     // Reviews
     Route::post('/reviews', [ReviewController::class, 'store'])->name('user.reviews.store');
     Route::put('/reviews/{review}', [ReviewController::class, 'update'])->name('user.reviews.update');
+    Route::delete('/reviews/{review}', [ReviewController::class, 'destroy'])->name('user.reviews.destroy');
 
     // Addresses
     Route::get('/addresses', [UserAddressController::class, 'index'])->name('user.addresses.index');
@@ -100,7 +114,7 @@ Route::prefix('admin')
         // Dashboard (Inertia page)
         Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('admin.dashboard');
 
-        // Dashboard analytics (JSON endpoints powering widgets/charts)
+        // Dashboard analytics
         Route::get('/dashboard/overview', [AdminAnalyticsController::class, 'overview'])->name('admin.dashboard.overview');
         Route::get('/dashboard/revenue', [AdminAnalyticsController::class, 'revenue'])->name('admin.dashboard.revenue');
         Route::get('/dashboard/orders-chart', [AdminAnalyticsController::class, 'ordersChart'])->name('admin.dashboard.orders-chart');
@@ -113,7 +127,11 @@ Route::prefix('admin')
         Route::get('/dashboard/payment-analytics', [AdminAnalyticsController::class, 'paymentAnalytics'])->name('admin.dashboard.payment-analytics');
         Route::get('/dashboard/traffic-analytics', [AdminAnalyticsController::class, 'trafficAnalytics'])->name('admin.dashboard.traffic-analytics');
 
-        // Catalogues (top-level catalog groupings)
+        // Admin Profile
+        Route::get('/profile', [AdminProfileController::class, 'index'])->name('admin.profile');
+        Route::put('/profile', [AuthController::class, 'updateProfile'])->name('admin.profile.update');
+
+        // Catalogues
         Route::get('/catalogues', [CatalogueAdminController::class, 'index'])->name('admin.catalogues.index');
         Route::get('/catalogues/create', [CatalogueAdminController::class, 'create'])->name('admin.catalogues.create');
         Route::post('/catalogues', [CatalogueAdminController::class, 'store'])->name('admin.catalogues.store');
@@ -121,7 +139,7 @@ Route::prefix('admin')
         Route::put('/catalogues/{catalogue}', [CatalogueAdminController::class, 'update'])->name('admin.catalogues.update');
         Route::delete('/catalogues/{catalogue}', [CatalogueAdminController::class, 'destroy'])->name('admin.catalogues.destroy');
 
-        // Categories (nested within a catalogue)
+        // Categories
         Route::get('/categories', [CategoryAdminController::class, 'index'])->name('admin.categories.index');
         Route::get('/categories/create', [CategoryAdminController::class, 'create'])->name('admin.categories.create');
         Route::post('/categories', [CategoryAdminController::class, 'store'])->name('admin.categories.store');
@@ -129,7 +147,7 @@ Route::prefix('admin')
         Route::put('/categories/{category}', [CategoryAdminController::class, 'update'])->name('admin.categories.update');
         Route::delete('/categories/{category}', [CategoryAdminController::class, 'destroy'])->name('admin.categories.destroy');
 
-        // Products Management (aggregate: product + variant + inventory + images)
+        // Products Management
         Route::get('/products', [ProductAdminController::class, 'index'])->name('admin.products.index');
         Route::get('/products/create', [ProductAdminController::class, 'create'])->name('admin.products.create');
         Route::post('/products', [ProductAdminController::class, 'store'])->name('admin.products.store');
@@ -141,5 +159,13 @@ Route::prefix('admin')
         Route::get('/orders', [AdminDashboardController::class, 'orders'])->name('admin.orders');
         Route::get('/orders/{order}', [AdminDashboardController::class, 'showOrder'])->name('admin.orders.show');
         Route::put('/orders/{order}', [AdminDashboardController::class, 'updateOrder'])->name('admin.orders.update');
+
+        // Users Management
+        Route::get('/users', [UserAdminController::class, 'indexPage'])->name('admin.users');
+
+        // Settings
+        Route::get('/settings', function () {
+            return \Inertia\Inertia::render('Admin/Settings');
+        })->name('admin.settings');
 
     });
