@@ -42,9 +42,9 @@ class CustomerPortalController extends Controller
 
         return Inertia::render('Customer/Dashboard', [
             'stats' => [
-                'orders_count'     => $ordersCount,
-                'total_spent'      => $totalSpent,
-                'reviews_count'    => $reviewsCount,
+                'orders_count' => $ordersCount,
+                'total_spent' => $totalSpent,
+                'reviews_count' => $reviewsCount,
                 'cart_items_count' => (int) $cartItemsCount,
             ],
             'recent_orders' => $recentOrders,
@@ -95,7 +95,7 @@ class CustomerPortalController extends Controller
             ->get();
 
         return Inertia::render('Customer/Reviews', [
-            'reviews'                => $reviews,
+            'reviews' => $reviews,
             'pending_review_products' => $pendingReviewProducts,
         ]);
     }
@@ -127,10 +127,10 @@ class CustomerPortalController extends Controller
 
         return Inertia::render('Customer/History', [
             'orders' => [
-                'data'         => $ordersWithItems,
+                'data' => $ordersWithItems,
                 'current_page' => $orders->currentPage(),
-                'last_page'    => $orders->lastPage(),
-                'total'        => $orders->total(),
+                'last_page' => $orders->lastPage(),
+                'total' => $orders->total(),
             ],
         ]);
     }
@@ -140,19 +140,24 @@ class CustomerPortalController extends Controller
         return Inertia::render('Customer/Settings');
     }
 
+    public function addresses()
+    {
+        return Inertia::render('Customer/Addresses');
+    }
+
     public function changePassword(Request $request)
     {
         $user = $request->user();
 
         $validated = $request->validate([
-            'current_password'      => 'required|string',
-            'password'              => 'required|string|min:8|confirmed',
+            'current_password' => 'required|string',
+            'password' => 'required|string|min:8|confirmed',
         ]);
 
         if (!Hash::check($validated['current_password'], $user->password_hash)) {
             return response()->json([
                 'message' => 'Current password is incorrect.',
-                'errors'  => ['current_password' => ['The current password you entered is incorrect.']],
+                'errors' => ['current_password' => ['The current password you entered is incorrect.']],
             ], 422);
         }
 

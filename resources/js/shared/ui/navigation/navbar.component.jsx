@@ -39,7 +39,7 @@ export default function NavbarComponent() {
                 BD
               </div>
               <div>
-                <p className="text-[10px] uppercase tracking-[0.3em] text-slate-500">BazaarDeck</p>
+                <p className="text-[10px] uppercase tracking-[0.3em] text-slate-500">AmazStore</p>
                 <p className="text-sm font-semibold text-slate-900">Marketplace</p>
               </div>
             </Link>
@@ -99,7 +99,10 @@ export default function NavbarComponent() {
 
                   {user ? (
                     <>
-                      <Link href="/orders" onClick={() => setOpen(false)} className="mt-2 block w-full rounded-2xl px-4 py-3 text-left text-sm font-semibold text-slate-800 transition hover:bg-sky-50">
+                      <Link href="/account/dashboard" onClick={() => setOpen(false)} className="mt-2 block w-full rounded-2xl px-4 py-3 text-left text-sm font-semibold text-slate-800 transition hover:bg-sky-50">
+                        Profile
+                      </Link>
+                      <Link href="/orders" onClick={() => setOpen(false)} className="block w-full rounded-2xl px-4 py-3 text-left text-sm font-semibold text-slate-800 transition hover:bg-sky-50">
                         My Orders
                       </Link>
                       {isAdmin && (

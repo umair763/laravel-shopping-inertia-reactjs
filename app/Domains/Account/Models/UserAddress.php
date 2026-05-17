@@ -16,6 +16,7 @@ use Illuminate\Database\Eloquent\Model;
   'postal_code',
   'address_line_1',
   'address_line_2',
+  'phone',
   'is_default',
 ])]
 class UserAddress extends Model

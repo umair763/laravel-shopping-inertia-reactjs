@@ -15,7 +15,9 @@
     },
     "dependencies": {
         "@inertiajs/react": "^3.0.3",
+        "@tanstack/react-query": "^5.100.10",
         "@vitejs/plugin-react": "^6.0.1",
+        "axios": "^1.16.1",
         "lucide-react": "^1.14.0",
         "react": "^19.2.5",
         "react-dom": "^19.2.5",

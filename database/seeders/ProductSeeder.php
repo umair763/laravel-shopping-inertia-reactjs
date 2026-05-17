@@ -7,6 +7,7 @@ use App\Domains\Catalog\Models\ProductVariant;
 use App\Domains\Catalog\Models\ProductImage;
 use App\Domains\Catalog\Models\Inventory;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
 class ProductSeeder extends Seeder
@@ -16,6 +17,11 @@ class ProductSeeder extends Seeder
    */
   public function run(): void
   {
+    // Clear existing data
+    DB::table('product_images')->delete();
+    DB::table('inventory')->delete();
+    DB::table('product_variants')->delete();
+    DB::table('products')->delete();
     $products = [
       [
         'name' => 'Wireless Headphones Pro',
@@ -23,7 +29,7 @@ class ProductSeeder extends Seeder
         'price' => 199.99,
         'quantity' => 50,
         'sku' => 'WH-PRO-001',
-        'image_url' => 'https://via.placeholder.com/300?text=Wireless+Headphones',
+        'image_url' => 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400&h=400&fit=crop',
       ],
       [
         'name' => 'Mechanical Keyboard RGB',
@@ -31,7 +37,7 @@ class ProductSeeder extends Seeder
         'price' => 149.99,
         'quantity' => 75,
         'sku' => 'KB-RGB-001',
-        'image_url' => 'https://via.placeholder.com/300?text=Mechanical+Keyboard',
+        'image_url' => 'https://images.unsplash.com/photo-1587829191301-4b63ff1c87d5?w=400&h=400&fit=crop',
       ],
       [
         'name' => '4K Webcam',
@@ -39,7 +45,7 @@ class ProductSeeder extends Seeder
         'price' => 89.99,
         'quantity' => 40,
         'sku' => 'WC-4K-001',
-        'image_url' => 'https://via.placeholder.com/300?text=4K+Webcam',
+        'image_url' => 'https://images.unsplash.com/photo-1598327105666-5b89351aff97?w=400&h=400&fit=crop',
       ],
       [
         'name' => 'Smart Watch Ultra',
@@ -47,7 +53,7 @@ class ProductSeeder extends Seeder
         'price' => 299.99,
         'quantity' => 35,
         'sku' => 'SW-ULTRA-001',
-        'image_url' => 'https://via.placeholder.com/300?text=Smart+Watch',
+        'image_url' => 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=400&h=400&fit=crop',
       ],
       [
         'name' => 'Classic Cotton T-Shirt',
@@ -55,7 +61,7 @@ class ProductSeeder extends Seeder
         'price' => 24.99,
         'quantity' => 200,
         'sku' => 'TS-COTTON-001',
-        'image_url' => 'https://via.placeholder.com/300?text=Cotton+T-Shirt',
+        'image_url' => 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=400&h=400&fit=crop',
       ],
       [
         'name' => 'Designer Jeans',
@@ -63,7 +69,7 @@ class ProductSeeder extends Seeder
         'price' => 79.99,
         'quantity' => 100,
         'sku' => 'JN-DSGNR-001',
-        'image_url' => 'https://via.placeholder.com/300?text=Designer+Jeans',
+        'image_url' => 'https://images.unsplash.com/photo-1542272604-787c62d465d1?w=400&h=400&fit=crop',
       ],
       [
         'name' => 'Leather Jacket',
@@ -71,7 +77,7 @@ class ProductSeeder extends Seeder
         'price' => 249.99,
         'quantity' => 25,
         'sku' => 'JK-LTH-001',
-        'image_url' => 'https://via.placeholder.com/300?text=Leather+Jacket',
+        'image_url' => 'https://images.unsplash.com/photo-1551028719-00167b16ebc5?w=400&h=400&fit=crop',
       ],
       [
         'name' => 'Running Shoes Pro',
@@ -79,7 +85,7 @@ class ProductSeeder extends Seeder
         'price' => 119.99,
         'quantity' => 80,
         'sku' => 'SH-RUN-001',
-        'image_url' => 'https://via.placeholder.com/300?text=Running+Shoes',
+        'image_url' => 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=400&h=400&fit=crop',
       ],
       [
         'name' => 'Yoga Mat Premium',
@@ -87,7 +93,7 @@ class ProductSeeder extends Seeder
         'price' => 49.99,
         'quantity' => 60,
         'sku' => 'YM-PREM-001',
-        'image_url' => 'https://via.placeholder.com/300?text=Yoga+Mat',
+        'image_url' => 'https://images.unsplash.com/photo-1601925260368-ae2f83cf8b7f?w=400&h=400&fit=crop',
       ],
       [
         'name' => 'Dumbbells Set 20kg',
@@ -95,7 +101,7 @@ class ProductSeeder extends Seeder
         'price' => 149.99,
         'quantity' => 30,
         'sku' => 'DB-20KG-001',
-        'image_url' => 'https://via.placeholder.com/300?text=Dumbbells+Set',
+        'image_url' => 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=400&h=400&fit=crop',
       ],
       [
         'name' => 'The Clean Code Book',
@@ -103,7 +109,7 @@ class ProductSeeder extends Seeder
         'price' => 39.99,
         'quantity' => 45,
         'sku' => 'BK-CLEAN-001',
-        'image_url' => 'https://via.placeholder.com/300?text=Clean+Code+Book',
+        'image_url' => 'https://images.unsplash.com/photo-150784272343-583f20270319?w=400&h=400&fit=crop',
       ],
       [
         'name' => 'Design Patterns Book',
@@ -111,7 +117,7 @@ class ProductSeeder extends Seeder
         'price' => 49.99,
         'quantity' => 35,
         'sku' => 'BK-DPAT-001',
-        'image_url' => 'https://via.placeholder.com/300?text=Design+Patterns',
+        'image_url' => 'https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?w=400&h=400&fit=crop',
       ],
       [
         'name' => 'Ceramic Coffee Mug Set',
@@ -119,7 +125,7 @@ class ProductSeeder extends Seeder
         'price' => 34.99,
         'quantity' => 90,
         'sku' => 'MG-CER-001',
-        'image_url' => 'https://via.placeholder.com/300?text=Coffee+Mugs',
+        'image_url' => 'https://images.unsplash.com/photo-1508615039623-a25605d2378d?w=400&h=400&fit=crop',
       ],
       [
         'name' => 'Desk Lamp LED',
@@ -127,7 +133,7 @@ class ProductSeeder extends Seeder
         'price' => 59.99,
         'quantity' => 55,
         'sku' => 'LP-LED-001',
-        'image_url' => 'https://via.placeholder.com/300?text=Desk+Lamp',
+        'image_url' => 'https://images.unsplash.com/photo-1565636192335-14c8d7cb6a69?w=400&h=400&fit=crop',
       ],
       [
         'name' => 'Wall Clock Modern',
@@ -135,7 +141,7 @@ class ProductSeeder extends Seeder
         'price' => 44.99,
         'quantity' => 70,
         'sku' => 'CK-MOD-001',
-        'image_url' => 'https://via.placeholder.com/300?text=Wall+Clock',
+        'image_url' => 'https://images.unsplash.com/photo-1524678606370-a47ad25cb82a?w=400&h=400&fit=crop',
       ],
     ];
 

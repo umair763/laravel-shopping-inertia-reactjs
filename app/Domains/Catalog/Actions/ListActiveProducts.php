@@ -15,6 +15,7 @@ class ListActiveProducts
   {
     $query = Product::query()
       ->where('status', 'active')
+      ->whereHas('variants') // Only show products with variants
       ->orderBy('created_at', 'desc');
 
     if (!empty($filters['category'])) {

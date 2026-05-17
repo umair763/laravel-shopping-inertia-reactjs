@@ -28,7 +28,7 @@ class CartController extends Controller
       ->orderByDesc('is_default')
       ->get();
 
-    return Inertia::render('User/Cart', [
+    return Inertia::render('Customer/Cart', [
       'cart' => $cart,
       'addresses' => $addresses,
     ]);

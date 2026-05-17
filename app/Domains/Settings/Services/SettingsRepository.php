@@ -28,7 +28,7 @@ class SettingsRepository
   }
 
   /**
-   * Persist one setting. Supports dot notation: set("general.store_name", "BazaarDeck").
+   * Persist one setting. Supports dot notation: set("general.store_name", "AmazStore").
    * Pass $encrypted = true to encrypt the value at rest (recommended for API keys).
    */
   public function set(string $dottedKey, mixed $value, ?string $userId = null, bool $encrypted = false): Setting

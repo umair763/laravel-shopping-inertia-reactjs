@@ -1,11 +1,14 @@
 import React from "react";
 import { createRoot } from "react-dom/client";
 import { createInertiaApp } from "@inertiajs/react";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import "../css/app.css";
 import ThemeProvider from "./app/providers/theme.provider.jsx";
 import DashboardLayout from "./layouts/dashboard.layout.jsx";
 import StoreLayout from "./layouts/store.layout.jsx";
 import CustomerPortalLayout from "./layouts/customer.portal.layout.jsx";
+
+const queryClient = new QueryClient();
 
 const pages = import.meta.glob([
     "./pages/**/*.jsx",
@@ -17,16 +20,17 @@ const routeMap = {
     "Welcome":           "./pages/store/home.page.jsx",
     "User/Products":     "./pages/store/home.page.jsx",
     "User/ViewProduct":  "./pages/store/product.page.jsx",
-    "User/Cart":         "./features/cart/pages/cart.page.jsx",
-    "User/Orders":       "./features/orders/pages/my.orders.page.jsx",
-    "User/OrderDetail":  "./features/orders/pages/order.details.page.jsx",
 
     // Customer Portal
+    "Customer/Cart":     "./features/cart/pages/cart.page.jsx",
+    "Customer/Orders":   "./features/orders/pages/my.orders.page.jsx",
+    "Customer/OrderDetail":  "./features/orders/pages/order.details.page.jsx",
     "Customer/Dashboard": "./features/account/pages/dashboard.page.jsx",
     "Customer/Profile":   "./features/account/pages/profile.page.jsx",
     "Customer/Reviews":   "./features/account/pages/reviews.page.jsx",
     "Customer/History":   "./features/account/pages/purchase.history.page.jsx",
     "Customer/Settings":  "./features/account/pages/account.settings.page.jsx",
+    "Customer/Addresses": "./pages/Customer/Addresses.jsx",
 
     // Auth
     "Auth/User/Login":    "./features/account/pages/login.page.jsx",
@@ -52,7 +56,7 @@ const routeMap = {
 };
 
 createInertiaApp({
-    title: (title) => (title ? `${title} - BazaarDeck` : "BazaarDeck"),
+    title: (title) => (title ? `${title} - AmazStore` : "AmazStore"),
     resolve: (name) => {
         const path = routeMap[name];
         if (!path || !pages[path]) {
@@ -77,9 +81,11 @@ createInertiaApp({
         const root = createRoot(el);
         root.render(
             <React.StrictMode>
-                <ThemeProvider>
-                    <App {...props} />
-                </ThemeProvider>
+                <QueryClientProvider client={queryClient}>
+                    <ThemeProvider>
+                        <App {...props} />
+                    </ThemeProvider>
+                </QueryClientProvider>
             </React.StrictMode>,
         );
     },

@@ -32,7 +32,7 @@ class DatabaseSeeder extends Seeder
         // ── Users ──────────────────────────────────────────────────────
         $admin = User::updateOrCreate(['email' => 'admin@gmail.com'], [
             'first_name' => 'Admin',
-            'last_name' => 'BazaarDeck',
+            'last_name' => 'AmazStore',
             'username' => 'admin',
             'password_hash' => Hash::make('password123'),
             'role' => 'admin',
@@ -276,7 +276,7 @@ class DatabaseSeeder extends Seeder
             ['id' => $this->uuid(), 'cart_id' => $cartId, 'product_id' => $productIds['usb-c-hub-7in1'], 'variant_id' => $variantIds['usb-c-hub-7in1'], 'quantity' => 2, 'unit_price' => 49.99, 'created_at' => now()],
         ]);
 
-        $this->command->info('✓ BazaarDeck seeded: admin@gmail.com / user@example.com (password: password123)');
+        $this->command->info('✓ AmazStore seeded: admin@gmail.com / user@example.com (password: password123)');
     }
 
     private function uuid(): string

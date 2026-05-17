@@ -1,6 +1,6 @@
 import React, { useMemo, useState } from "react";
 import { Link, router, usePage } from "@inertiajs/react";
-import StoreLayout from "../../../layouts/store.layout.jsx";
+import CustomerPortalLayout from "../../../layouts/customer.portal.layout.jsx";
 import Container from "../../../shared/ui/layout/container.jsx";
 
 function getXsrfHeader() {
@@ -298,5 +298,3 @@ export default function CartPage({ cart, addresses = [] }) {
     </Container>
   );
 }
-
-CartPage.layout = (page) => <StoreLayout>{page}</StoreLayout>;

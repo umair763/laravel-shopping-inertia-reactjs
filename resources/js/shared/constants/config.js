@@ -1,5 +1,5 @@
 const config = {
-  appName: "BazaarDeck",
+  appName: "AmazStore",
   currency: "USD",
 };
 

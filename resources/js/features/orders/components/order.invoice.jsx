@@ -123,8 +123,8 @@ export default function OrderInvoice({ order, onClose }) {
                 <div ref={printRef} className="p-6 space-y-6">
                     <div className="invoice-header flex items-start justify-between">
                         <div>
-                            <p className="text-2xl font-black text-sky-500">BazaarDeck</p>
-                            <p className="text-xs text-slate-400 mt-1">bazaardeck.com</p>
+                            <p className="text-2xl font-black text-sky-500">AmazStore</p>
+                            <p className="text-xs text-slate-400 mt-1">AmazStore.com</p>
                         </div>
                         <div className="text-right space-y-1">
                             <p className="text-xl font-black text-slate-900">INVOICE</p>
@@ -278,9 +278,9 @@ export default function OrderInvoice({ order, onClose }) {
                     </div>
 
                     <div className="footer border-t border-slate-100 pt-4 text-center text-xs text-slate-400">
-                        <p>BazaarDeck — Thank you for your order!</p>
+                        <p>AmazStore — Thank you for your order!</p>
                         <p className="mt-1">
-                            Questions? Contact us at support@bazaardeck.com
+                            Questions? Contact us at support@AmazStore.com
                         </p>
                     </div>
                 </div>

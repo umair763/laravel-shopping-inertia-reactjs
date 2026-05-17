@@ -1,7 +1,7 @@
 import React, { useMemo, useState } from "react";
 import { Link } from "@inertiajs/react";
 import OrderCard from "../components/order.card.jsx";
-import StoreLayout from "../../../layouts/store.layout.jsx";
+import CustomerPortalLayout from "../../../layouts/customer.portal.layout.jsx";
 import Container from "../../../shared/ui/layout/container.jsx";
 
 const STATUS_FILTERS = [
@@ -172,5 +172,3 @@ export default function MyOrdersPage({ orders }) {
         </Container>
     );
 }
-
-MyOrdersPage.layout = (page) => <StoreLayout>{page}</StoreLayout>;

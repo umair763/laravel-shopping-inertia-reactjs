@@ -19,7 +19,7 @@ class OrderController extends Controller
   {
     $orders = app(ListUserOrders::class)->handle($request->user(), true, 10);
 
-    return Inertia::render('User/Orders', [
+    return Inertia::render('Customer/Orders', [
       'orders' => $orders,
     ]);
   }
@@ -39,7 +39,7 @@ class OrderController extends Controller
       'user:id,first_name,last_name,email',
     ]);
 
-    return Inertia::render('User/OrderDetail', [
+    return Inertia::render('Customer/OrderDetail', [
       'order' => $order,
     ]);
   }

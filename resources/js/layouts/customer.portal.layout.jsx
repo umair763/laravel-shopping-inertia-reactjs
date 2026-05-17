@@ -8,6 +8,7 @@ import {
     Star,
     History,
     Settings,
+    MapPin,
     Store,
     LogOut,
     Menu,
@@ -22,6 +23,7 @@ const navItems = [
     { href: "/cart", label: "Cart", icon: ShoppingCart },
     { href: "/account/reviews", label: "Reviews", icon: Star },
     { href: "/account/history", label: "Purchase History", icon: History },
+    { href: "/account/addresses", label: "Addresses", icon: MapPin },
     { href: "/account/settings", label: "Account Settings", icon: Settings },
 ];
 
@@ -159,7 +161,7 @@ export default function CustomerPortalLayout({ children }) {
                     <div className="flex h-7 w-7 items-center justify-center rounded-md bg-sky-500 text-xs font-black text-white">
                         BD
                     </div>
-                    <span className="text-sm font-bold text-slate-900">BazaarDeck</span>
+                    <span className="text-sm font-bold text-slate-900">AmazStore</span>
                 </Link>
             </div>
 
@@ -188,7 +190,7 @@ export default function CustomerPortalLayout({ children }) {
                                     <div className="flex h-7 w-7 items-center justify-center rounded-md bg-sky-500 text-xs font-black text-white">
                                         BD
                                     </div>
-                                    <span className="text-sm font-bold text-slate-900">BazaarDeck</span>
+                                    <span className="text-sm font-bold text-slate-900">AmazStore</span>
                                 </Link>
                             )}
                             <button

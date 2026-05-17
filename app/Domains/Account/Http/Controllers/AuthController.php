@@ -142,6 +142,35 @@ class AuthController extends Controller
   }
 
   /**
+   * Get API token for authenticated user (web login)
+   * GET /api/account/token
+   */
+  public function getToken(Request $request)
+  {
+    $user = $request->user();
+
+    if (!$user) {
+      return response()->json([
+        'message' => 'Unauthenticated.',
+      ], 401);
+    }
+
+    // Get existing token or create new one
+    $token = $request->session()->get('api_token');
+
+    if (!$token) {
+      $token = app(IssueApiToken::class)->handle($user);
+      $request->session()->put('api_token', $token);
+    }
+
+    return response()->json([
+      'token' => $token,
+      'token_type' => 'Bearer',
+      'success' => true,
+    ]);
+  }
+
+  /**
    * Update the authenticated user's profile.
    */
   public function updateProfile(UpdateProfileRequest $request)
@@ -215,6 +244,10 @@ class AuthController extends Controller
     if ($authenticate) {
       Auth::login($user);
       $request->session()->regenerate();
+
+      // Generate API token for authenticated web requests
+      $token = app(IssueApiToken::class)->handle($user);
+      $request->session()->put('api_token', $token);
     }
 
     $message = $role === 'admin'
@@ -272,6 +305,10 @@ class AuthController extends Controller
 
     Auth::login($user);
     $request->session()->regenerate();
+
+    // Generate API token for authenticated web requests
+    $token = app(IssueApiToken::class)->handle($user);
+    $request->session()->put('api_token', $token);
 
     $redirectRoute = $role === 'admin' ? 'admin.dashboard' : 'account.dashboard';
 

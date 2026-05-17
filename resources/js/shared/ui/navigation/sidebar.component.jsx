@@ -33,7 +33,7 @@ export default function SidebarComponent() {
         {!collapsed ? (
           <div>
             <p className="text-[10px] uppercase tracking-[0.3em] text-slate-400">Admin workspace</p>
-            <h2 className="mt-2 text-2xl font-black tracking-tight text-slate-900">BazaarDeck</h2>
+            <h2 className="mt-2 text-2xl font-black tracking-tight text-slate-900">AmazStore</h2>
           </div>
         ) : (
           <div className="flex items-center justify-center w-full">

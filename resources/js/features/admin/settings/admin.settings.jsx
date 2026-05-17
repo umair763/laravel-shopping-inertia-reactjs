@@ -40,7 +40,7 @@ export default function AdminSettings({ settings: serverSettings }) {
     const [saving, setSaving] = useState(false);
 
     const [general, setGeneral] = useState({
-        storeName: serverSettings?.store_name || "BazaarDeck",
+        storeName: serverSettings?.store_name || "AmazStore",
         storeEmail: serverSettings?.store_email || "",
         storeUrl: serverSettings?.store_url || "",
         currency: serverSettings?.currency || "USD",

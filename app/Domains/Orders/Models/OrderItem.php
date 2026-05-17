@@ -19,6 +19,8 @@ class OrderItem extends Model
 
   protected $keyType = 'string';
 
+  public $timestamps = false;
+
   /**
    * Get the order this item belongs to
    */

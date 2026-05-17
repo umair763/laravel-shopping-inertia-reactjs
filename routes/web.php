@@ -61,14 +61,16 @@ Route::middleware(['auth'])->group(function () {
     // ── Customer Portal ──────────────────────────────────────────────
     Route::prefix('account')->name('account.')->group(function () {
         Route::get('/dashboard', [CustomerPortalController::class, 'dashboard'])->name('dashboard');
-        Route::get('/profile',   [CustomerPortalController::class, 'profile'])->name('profile');
-        Route::get('/reviews',   [CustomerPortalController::class, 'reviews'])->name('reviews');
-        Route::get('/history',   [CustomerPortalController::class, 'history'])->name('history');
-        Route::get('/settings',  [CustomerPortalController::class, 'settings'])->name('settings');
+        Route::get('/profile', [CustomerPortalController::class, 'profile'])->name('profile');
+        Route::get('/reviews', [CustomerPortalController::class, 'reviews'])->name('reviews');
+        Route::get('/history', [CustomerPortalController::class, 'history'])->name('history');
+        Route::get('/settings', [CustomerPortalController::class, 'settings'])->name('settings');
+        Route::get('/addresses', [CustomerPortalController::class, 'addresses'])->name('addresses');
 
         // Profile & password update (session-authenticated JSON endpoints)
-        Route::put('/profile',  [AuthController::class, 'updateProfile'])->name('profile.update');
+        Route::put('/profile', [AuthController::class, 'updateProfile'])->name('profile.update');
         Route::post('/password', [CustomerPortalController::class, 'changePassword'])->name('password.change');
+        Route::get('/api-token', [AuthController::class, 'getToken'])->name('token');
     });
 
     // Orders
@@ -96,6 +98,7 @@ Route::middleware(['auth'])->group(function () {
     // Addresses
     Route::get('/addresses', [UserAddressController::class, 'index'])->name('user.addresses.index');
     Route::post('/addresses', [UserAddressController::class, 'store'])->name('user.addresses.store');
+    Route::put('/addresses/{address}', [UserAddressController::class, 'update'])->name('user.addresses.update');
     Route::delete('/addresses/{address}', [UserAddressController::class, 'destroy'])->name('user.addresses.destroy');
 
 });
